@@ -1,0 +1,62 @@
+\begin{enumerate}
+    \item \textbf{Intialization Module}
+    
+    \begin{enumerate}
+        \item Define/Specify the logic or argument to pick specific initialization frames for each dataset.
+        
+        \item Identify features in both frames with one of the following techniques:
+            \begin{itemize}
+                \item Corner detection: Harris, Shi-Tomasi, FastCorner
+                \item Sift Features
+                \item \textbf{Bonus}: Lift
+            \end{itemize}
+        
+        \item Match the keypoints between frames to find keypoint correspondences between different views (between frames or between multiple cameras).
+            \begin{itemize}
+                \item Choose a type of distance/similarity metric
+                \item Choose to do matching with either pairwise comparison or KLT 
+            \end{itemize}
+        
+        \item Estimate the point cloud of the landmarks.
+        
+        \item Estimate relative pose of the next frame by calculating the fundamental matrix.
+            \begin{itemize}
+                \item Use 8 point ransac (estimateFundamentalMatrix)
+                \item \textbf{Bonus}: 5 point ransac
+                \item \textbf{Bonus}: 1 point ransac + 5 point ransac
+            \end{itemize}
+        
+        \item Refine the estimated pose with Bundle Correction. 
+        
+    \end{enumerate}
+    
+    \item \textbf{Continous VO Module}
+    \begin{enumerate}
+        \item Create functions that iterates over all subsequent states, always using the keypoints in frame $i$ and compare/match them to those of frame $i+1$ to estimate the pose of frame $i+1$. (practically following the same pipeline as initialization).
+        
+        \item Persist the the estimated poses at each step.
+        
+        \item Choose error metrics and create function that calculates global and local error in pose estimation:
+            \begin{itemize}
+                \item Figure out how to obtain the ground truth of poses at the local and global level
+                \item Create function that computes the metric for both
+            \end{itemize}
+        
+        \item \textbf{Bonus:} Use some method to correct global drift.
+        
+    \item \textbf{Visualizing results}:
+        \item Create interface that runs the pipeline 
+            \begin{itemize}
+                \item Display current image, plot's current and past features and the distance between them (plots matched features). 
+                \item Plot trajectory and landmarks of the last 20 frames.
+                \item Plot \# of tracked landmarks in the last 20 frames 
+                \item Plots full trajectory
+                \item \textbf{Bonus:} Plots trajectory over sattelite map
+            \end{itemize}
+            
+        \item As the script runs, stitch the resulting matched features into a video (screencast)
+        
+    \end{enumerate}
+    
+\end{enumerate}
+
