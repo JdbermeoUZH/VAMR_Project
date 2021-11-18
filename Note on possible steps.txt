@@ -1,0 +1,25 @@
+
+1. Pick frames to use for initializing the 3d keypoints
+	- for Kitti they recommend 1 and 3
+	
+2. Identify features in both frames	
+	- Use either corners (Harris or Shi-Tomasi)
+		- With Intensity patch matching
+		- HOG descriptor
+	- SIFT
+	- For the 0.5: LIFT 
+	
+	
+3. Match the frames	to get the point correspondences
+	- Choose a distance/similarity metric
+	- Use pairwise comparisson
+	
+	- Use KLT (exercise 8)
+	
+4. Estimate the point cloud of the landmarks
+	- Calculate the fundamental matrix (the intrinsic of the cameras are not given)
+		- Use 8 point ransac (estimateFundamentalMatrix)
+		- For the 0.5: 5 point ransac, 1 point ransac + 5 point ransac
+	
+5. Optimize the estimated fundamental matrix with bundle correction (check if already done)
+		- over the reprojection error 
