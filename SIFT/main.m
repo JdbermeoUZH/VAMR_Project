@@ -28,12 +28,8 @@ kpt_locations = cell(1, 2);
 descriptors = cell(1, 2);
 
 for img_idx = 1:2
-    image_pyramid = computeImagePyramid(images{img_idx}, num_octaves);
-    blurred_images = computeBlurredImages(image_pyramid, num_scales, sigma);
-    DoGs = computeDoGs(blurred_images);
-    tmp_kpt_locations = extractKeypoints(DoGs, contrast_threshold);
-    [descriptors{img_idx}, kpt_locations{img_idx}] =...
-        computeDescriptors(blurred_images, tmp_kpt_locations, rotation_inv);
+    [descriptors{img_idx}, kpt_locations{img_idx}] = sift(images{img_idx}, num_octaves, ...
+	    num_scales, sigma, contrast_threshold, rotation_inv);
 end
 
 indexPairs = matchFeatures(descriptors{1}, descriptors{2},...
