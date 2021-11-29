@@ -13,11 +13,9 @@ LoadProjectImages
 
 %% hyperparameters
 num_scales 			= 3; 			% 3, 	Scales per octave (num octaves is calculated automatically).
-sigma 				= 1.0;			% 1,
+sigma 				= 1.6;			% 1,
 contrast_threshold	= 0.04;			% 0.04,
 rescale_factor 		= 0.3; 			% 0.3,	Rescaling of the original image for speed.
-
-match_lambda		= 6;			% 4,	Dont know if thats needed for SIFT
 
 %% init variable sizes
 valid_kpts	= cell(1, 2);
