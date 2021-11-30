@@ -1,6 +1,3 @@
-%% Setup
-ds = 2; % 0: KITTI, 1: Malaga, 2: parking
-
 if ds == 0
     % need to set kitti_path to folder containing "05" and "poses"
     assert(exist('kitti_path', 'var') ~= 0);
@@ -55,7 +52,8 @@ else
     assert(false);
 end
 
-%% Continuous operation
+%% Continuous operation 
+%(added test range for shorter runtime)
 if test
 	range = (bootstrap_frames(2)+1):test_range;
 else
@@ -63,7 +61,7 @@ else
 end
 
 %
-album = zeros(480,640,length(range));
+imgs    = cell(1,2);
 j = 1;
 %
 for i = range
@@ -84,7 +82,7 @@ for i = range
     end
     % Makes sure that plots refresh.
     pause(0.01);
-    album(:,:,j) = image;
+    imgs{j} = image;  % I dont get why we use "albums" and not just the {} form
     j = j+1;
-    prev_img = image;
+    prev_img = image; % still need me? 
 end
