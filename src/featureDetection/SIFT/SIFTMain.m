@@ -3,12 +3,16 @@
 % 	- hyperparams are set in the LoadHyperParams script
 % 	- filepaths are set in the LoadFilePaths script
 
-clear all
+clear all;
+close all;
+LoadFilePaths
+LoadHyperParams
+LoadProjectImages
 clc
 
 %% add necesary paths
-addpath('../../utils/');		% some utility functions (mostly plotting)
-addpath('../../setup/');		% project setup (hyperparams, loading images, ...)
+%addpath('../../utils/');		% some utility functions (mostly plotting)
+%addpath('../../setup/');		% project setup (hyperparams, loading images, ...)
 
 %% do we only test? 
 test					= true;

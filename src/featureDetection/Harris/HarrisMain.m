@@ -1,18 +1,15 @@
 clear all;
 close all;
+LoadFilePaths
+LoadHyperParams
+LoadProjectImages
+clc
 
 %% Load Images
-
-
-parking_path = 'parking'; %'C:\Users\User\Documents\School\VAMR\Project\parking'
 bootstrap_frames = [1 3];
 
-LoadProjectImages
 
 %% Harris
-
-
-
 % Randomly chosen parameters that seem to work well - can you find better
 % ones?
 corner_patch_size = 9; %9

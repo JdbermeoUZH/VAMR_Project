@@ -1,4 +1,4 @@
-function [kpts, desc] = computeDescriptors(image, num_scales, sigma, contrast_threshold);
+function [kpts, desc] = sift(image, num_scales, sigma, contrast_threshold)
 	% @brief: 	given an image return the SIFT keypoints and the coresponding features (descriptors)
 	% 
 	% @param(image)					: grayscale image

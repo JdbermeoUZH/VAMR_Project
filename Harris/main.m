@@ -8,6 +8,8 @@ parking_path = 'parking'; %'C:\Users\User\Documents\School\VAMR\Project\parking'
 bootstrap_frames = [1 3];
 
 LoadProjectImages
+LoadFilePaths
+LoadHyperParams
 
 %% Harris
 

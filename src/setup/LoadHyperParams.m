@@ -10,3 +10,7 @@ sift_contrast_threshold	= 0.03;			% 0.04, 0.02 gives more features (and still lo
 match_threshold			= 100;			% 100
 match_max_ratio			= 0.7;			% 0.7
 match_unique			= true;			% true
+
+%% Run params
+test					= true;         % Only run the test_range frames in 
+test_range				= 30;           % Number of frames to run the test
