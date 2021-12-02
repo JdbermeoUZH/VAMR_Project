@@ -14,7 +14,7 @@ harris_scores = harris(img0, corner_patch_size, harris_kappa);
 keypoints = selectKeypoints(...
     harris_scores, num_keypoints, nonmaximum_supression_radius);
 
-% Describe the points using Image Patch Descriptor (intensities of patch)
+% Describe the points using Image Patch Descriptor (intensities f 
 descriptors = describeKeypoints(img0, keypoints, descriptor_radius);
 end
 
