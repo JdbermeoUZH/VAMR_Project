@@ -1,4 +1,4 @@
-function [R,T] = disambiguateRelativePose(Rots,u3,points0_h,points1_h,K1,K2)
+function [R,T, P_3D] = disambiguateRelativePose(Rots,u3,points0_h,points1_h,K1,K2)
 % DISAMBIGUATERELATIVEPOSE- finds the correct relative camera pose (among
 % four possible configurations) by returning the one that yields points
 % lying in front of the image plane (with positive depth).
@@ -14,6 +14,8 @@ function [R,T] = disambiguateRelativePose(Rots,u3,points0_h,points1_h,K1,K2)
 % Returns:
 %   R -  3x3 the correct rotation matrix
 %   T -  3x1 the correct translation vector
+%   P_3D - Returns the 3D point cloud wrt to the first frame (world frame
+%                                                           of reference)
 %
 %   where [R|t] = T_C2_C1 = T_C2_W is a transformation that maps points
 %   from the world coordinate system (identical to the coordinate system of camera 1)
@@ -44,6 +46,7 @@ for iRot = 1:2
             % in front of both cameras
             R = R_C2_C1_test;
             T = T_C2_C1_test;
+            P_3D = P_C1(1:3, :);
             total_points_in_front_best = total_points_in_front;
         end
     end

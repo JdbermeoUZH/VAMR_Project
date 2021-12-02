@@ -9,7 +9,6 @@ clear all;
 close all;
 LoadFilePaths
 LoadHyperParams
-LoadProjectImages
 clc
 
 %% Range of images to use in test run
@@ -44,7 +43,7 @@ LoadProjectImages           % Starting images stored in img0 and img1
     'NumTrials',2000,'DistanceThreshold',1e-4);
 
 % Get the essential matrix. We assume K_1=K_2
-[R,T] = recoverPoseFromFundamentalMatrix(...
+[R,T, P_3D] = recoverPoseFromFundamentalMatrix(...
     F, K, K,matched_keypoints_1, matched_keypoints_2);
 
-%% Triangulate the matched points and get 3D point cloud
+%% TODO: Refine estimate of the 3D point-cloud with Bundle Correction
