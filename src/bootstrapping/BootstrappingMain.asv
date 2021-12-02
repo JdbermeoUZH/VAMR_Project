@@ -22,17 +22,26 @@ LoadProjectImages           % Starting images stored in img0 and img1
 % TODO: Change this for a function that calls a random feature matcher
 %       between both images
 % Feature Matching using Harris
-[keypoints_1, descriptors_1] = getHarrisFeatures(img0, ...
+[harris_scores, descriptors] = getHarrisFeatures(img0, ...
     corner_patch_size, harris_kappa, num_keypoints, nonmaximum_supression_radius,...
     descriptor_radius);
 
-[keypoints_2, descriptors_2] = getHarrisFeatures(img1, ...
-    corner_patch_size, harris_kappa, num_keypoints, nonmaximum_supression_radius,...
-    descriptor_radius);
+
+[harris_scores_2 = harris(img1, corner_patch_size, harris_kappa);
+
+% Select features based on on non-max supression 
+keypoints = selectKeypoints(...
+    harris_scores, num_keypoints, nonmaximum_supression_radius);
+keypoints_2 = selectKeypoints(...
+    harris_scores_2, num_keypoints, nonmaximum_supression_radius);
+
+% Describe the points using HOG
+descriptors = describeKeypoints(img0, keypoints, descriptor_radius);
+descriptors_2 = describeKeypoints(img1, keypoints_2, descriptor_radius);
 
 % Create vectors with positions of pixels matched in both frames
 [matched_keypoints, matched_keypoints_2] = getMatchedPoints(...
-    keypoints_2, keypoints_1, descriptors_2, descriptors_1, match_lambda);
+    keypoints_2, keypoints, descriptors_2, descriptors, match_lambda);
 
 %% Estimate the pose change with 8-point ransac
 % Get the fundamental matrix
