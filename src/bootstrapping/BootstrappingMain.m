@@ -20,7 +20,7 @@ LoadProjectImages           % Starting images stored in img0 and img1
                             %  All other frames stored in imgs
 
 %% Find the keypoint correspondences between the two images
-% TODO: Change this for a function that calls a random feature matcher
+% TODO (paul): Change this for a function that calls a random feature matcher
 %       between both images
 % Feature Matching using Harris
 [keypoints_1, descriptors_1] = getHarrisFeatures(img0, ...
