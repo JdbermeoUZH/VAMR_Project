@@ -32,7 +32,7 @@ for iRot = 1:2
         T_C2_C1_test = u3 * (-1)^iSignT;
         
         M2 = K2 * [R_C2_C1_test, T_C2_C1_test];
-        P_C1 = linearTriangulation(points0_h,points1_h,M1,M2);
+        P_C1 = linearTriangulation(points0_h, points1_h, M1, M2);
         
         % project in both cameras
         P_C2 = [R_C2_C1_test T_C2_C1_test] * P_C1;
