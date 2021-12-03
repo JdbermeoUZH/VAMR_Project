@@ -3,16 +3,16 @@
 % 	- hyperparams are set in the LoadHyperParams script
 % 	- filepaths are set in the LoadFilePaths script
 
+%% add necesary paths
+%addpath('../../utils/');		% some utility functions (mostly plotting)
+%addpath('../../setup/');		% project setup (hyperparams, loading images, ...)
+
 clear all;
 close all;
 LoadFilePaths
 LoadHyperParams
 LoadProjectImages
 clc
-
-%% add necesary paths
-%addpath('../../utils/');		% some utility functions (mostly plotting)
-%addpath('../../setup/');		% project setup (hyperparams, loading images, ...)
 
 %% do we only test? 
 test					= true;
@@ -29,7 +29,7 @@ LoadProjectImages
 %%%%%%%%%%%% here we actually start %%%%%%%%%%%%%%%%%%%%
 
 %% init variable sizes
-valid_kpts	= cell(1, 2);
+kpts	    = cell(1, 2);
 desc		= cell(1, 2);
 img_indices = 1:size(imgs,2);
 
@@ -53,3 +53,4 @@ for i = img_indices
 	hold off;
 	pause(pause_time);
 end
+
