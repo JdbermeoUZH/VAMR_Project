@@ -1,4 +1,4 @@
-function [R, T, P_3D] = bootstrap(datasets, hyperparameters)
+function [R, T, P_3D, matched_keypoints_1, matched_keypoints_2] = bootstrap(datasets, hyperparameters)
     % TODO: Documentation
     % simplify long var names
     img0    = datasets.img0;
@@ -51,14 +51,4 @@ function [R, T, P_3D] = bootstrap(datasets, hyperparameters)
     % Get the essential matrix. We assume K_1=K_2
     [R, T, P_3D] = recoverPoseFromFundamentalMatrix(...
         F, K, K,matched_keypoints_1, matched_keypoints_2);
-
-    % R,T should encode the pose of camera 2, such that M1 = [I|0] and M2=[R|t]
-    % P is a [4xN] matrix containing the triangulated point cloud (in
-    % homogeneous coordinates), given by the function linearTriangulation
-    plot3(P_3D_h(1,:), P_3D_h(2,:), P_3D_h(3,:), 'o');
-    p1 = matched_keypoints_1.';
-    p1 = [p1;ones(1, length(p1))];
-    p2 = matched_keypoints_2.';
-    p2 = [p2;ones(1, length(p2))];
-    plotPoseEstimation(P_3D_h, R, T, p1, p2, img0, img1, 1);
 end
