@@ -64,4 +64,4 @@ p1 = matched_keypoints_1.';
 p1 = [p1;ones(1, length(p1))];
 p2 = matched_keypoints_2.';
 p2 = [p2;ones(1, length(p2))];
-plotPoseEstimation(P_3D_h, R, T, p1, p2, img0, img1);
+plotPoseEstimation(P_3D_h, R, T, p1, p2, img0, img1, 1);
