@@ -8,7 +8,7 @@ hyperparameters.test_range				= 30;           % Number of frames to run the test
 hyperparameters.bootstrap_frames		= [1 3];
 
 %% hyperparams Feature detection
-hyperparameters.featDetec_algo          = "Harris";
+hyperparameters.featDetec_algo          = "SIFT";       % "Harris" or "SIFT"
 
 %% hyperparams Ransac
 hyperparameters.ransac_algo             = "8point";     %       which algo to use

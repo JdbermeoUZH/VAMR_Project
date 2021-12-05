@@ -1,18 +1,33 @@
-function [R, T, P_3D, matched_keypoints_1, matched_keypoints_2] = bootstrap(datasets, hyperparameters)
+function [R, T, P_3D, matched_keypoints_1, matched_keypoints_2, matches] = bootstrap(datasets, hyperparameters)
     % TODO: Documentation
+
     % simplify long var names
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     img0    = datasets.img0;
     img1    = datasets.img1;
     K       = datasets.K;
-
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % could also just use hyperparameters.the_thing_to_use in every function 
     featDetec_algo              = hyperparameters.featDetec_algo;
     ransac_algo                 = hyperparameters.ransac_algo;
+    % Harris Stuff
     corner_patch_size           = hyperparameters.corner_patch_size;
     harris_kappa                = hyperparameters.harris_kappa;
     num_keypoints               = hyperparameters.num_keypoints;
     nonmaximum_supression_radius= hyperparameters.nonmaximum_supression_radius;
     descriptor_radius           = hyperparameters.descriptor_radius;
     match_lambda                = hyperparameters.match_lambda;
+    % SIFT Stuff
+    num_scales                  = hyperparameters.sift_num_scales;
+    sigma                       = hyperparameters.sift_sigma;
+    contrast_threshold          = hyperparameters.sift_contrast_threshold;
+    % Matching Stuff (for SIFT)
+    match_threshold             = hyperparameters.match_threshold;
+    match_max_ratio             = hyperparameters.match_max_ratio;
+    match_unique                = hyperparameters.match_unique;
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Lets Go %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
     % Find the keypoint correspondences between the two images
     % --> extract keypoints and features (descriptors)
@@ -25,12 +40,22 @@ function [R, T, P_3D, matched_keypoints_1, matched_keypoints_2] = bootstrap(data
         [keypoints_2, descriptors_2] = getHarrisFeatures(img1, ...
             corner_patch_size, harris_kappa, num_keypoints, nonmaximum_supression_radius,...
             descriptor_radius);
+        % Create vectors with positions of pixels matched in both frames
+        [matched_keypoints_1, matched_keypoints_2] = getMatchedPoints(...
+            keypoints_2, keypoints_1, descriptors_2, descriptors_1, match_lambda);
     elseif (featDetec_algo == "SIFT")
-        % TODO
+        % img0
+        [keypoints_1, descriptors_1] = sift(img0, ...
+            num_scales, sigma, contrast_threshold);
+        % img1
+        [keypoints_2, descriptors_2] = sift(img1, ...
+            num_scales, sigma, contrast_threshold);
+        % Create vectors with positions of pixels matched in both frames
+        [matched_keypoints_1, matched_keypoints_2, matches] = getMatchedPoints_sift(...
+            keypoints_2, keypoints_1, descriptors_2, descriptors_1, ...
+            match_threshold, match_max_ratio, match_unique);
+
     end
-    % Create vectors with positions of pixels matched in both frames
-    [matched_keypoints_1, matched_keypoints_2] = getMatchedPoints(...
-        keypoints_2, keypoints_1, descriptors_2, descriptors_1, match_lambda);
 
     % Estimate the pose change with ransac
     % choose which ransac algo to use
