@@ -67,7 +67,6 @@ function [R, T, P_3D, matched_keypoints_1, matched_keypoints_2] = bootstrap(data
         [matched_keypoints_1, matched_keypoints_2] = getMatchedPoints_sift(...
             keypoints_2, keypoints_1, descriptors_2, descriptors_1, ...
             match_threshold, match_max_ratio, match_unique);
-
     end
 
     % Estimate the pose change with ransac
