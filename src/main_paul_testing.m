@@ -20,6 +20,7 @@ datasets        = LoadProjectImages(hyperparameters, filepaths);  % get our imag
 % anywhere else! Please do not change anything here ... Pauls workplace
 % only ;) 
 %%%%%%%%%%%%%%%%%%%% change the following according to what you want to test %%%%%%%%%%%%
+test.harris     = true;
 test.bootstrap  = true;
 test.sift       = false;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -31,14 +32,20 @@ fprintf('\n=============================================================\n');
 fprintf('======================= Start Testing =======================');
 fprintf('\n=============================================================\n');
 
+%% test harris
+if(test.harris)
+    fprintf('\n\n Test Harris \n=====================\n');
+    fig_count = harrisTest(datasets, hyperparameters, fig_count);
+end
+
 %% test bootstrapping
 if(test.bootstrap)
     fprintf('\n\n Test Bootstraping \n=====================\n');
-    bootstrapTest(datasets, hyperparameters, fig_count);
+    fig_count = bootstrapTest(datasets, hyperparameters, fig_count);
 end
 
 %% test sift
 if(test.sift)
     fprintf('\n\n Test SIFT \n=====================\n');
-    siftTest(datasets, hyperparameters, fig_count);
+    fig_count = siftTest(datasets, hyperparameters, fig_count);
 end

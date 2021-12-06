@@ -1,4 +1,4 @@
-function [] = siftTest(datasets, hyperparameters, fig_count)
+function [fig_count] = siftTest(datasets, hyperparameters, fig_count)
     %% plotting stuff
     pause_time				= 0.1;	% seconds to pause inbetween images displayed
     %% init variable sizes

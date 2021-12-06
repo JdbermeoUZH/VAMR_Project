@@ -1,4 +1,4 @@
-function [R, T, P_3D, matched_keypoints_1, matched_keypoints_2, matches] = bootstrap(datasets, hyperparameters)
+function [R, T, P_3D, matched_keypoints_1, matched_keypoints_2] = bootstrap(datasets, hyperparameters)
     % @brief:   depending on the algorithms set in the given hyperparameters we will 
     %           calculate the rotation, translation and a 3D point cloud of matched keypoints
     %           between two given images (from datasets). As a bounus we also return all
@@ -12,8 +12,6 @@ function [R, T, P_3D, matched_keypoints_1, matched_keypoints_2, matches] = boots
     % @return(P_3D)             :   3D point cloud of matched points 
     % @return(matched_keypoints_1): matched points in image from camera 1 (with outliers removed)
     % @return(matched_keypoints_2): matched points in image from camera 2 (with outliers removed)
-    % @return(matches)          :   matches matrix (indexPairs) as described on 
-    %                               https://www.mathworks.com/help/vision/ref/matchfeatures.html
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
     % simplify long var names
@@ -66,7 +64,7 @@ function [R, T, P_3D, matched_keypoints_1, matched_keypoints_2, matches] = boots
         [keypoints_2, descriptors_2] = sift(img1, ...
             num_scales, sigma, contrast_threshold);
         % Create vectors with positions of pixels matched in both frames
-        [matched_keypoints_1, matched_keypoints_2, matches] = getMatchedPoints_sift(...
+        [matched_keypoints_1, matched_keypoints_2] = getMatchedPoints_sift(...
             keypoints_2, keypoints_1, descriptors_2, descriptors_1, ...
             match_threshold, match_max_ratio, match_unique);
 
