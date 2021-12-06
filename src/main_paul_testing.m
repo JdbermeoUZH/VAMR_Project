@@ -66,19 +66,20 @@ if(test.sift)
     end
 
     %% plot
-    figure(1);
+    figure(fig_count);
     for i = img_indices
     	fprintf('\n\nPlot frame %d\n=====================\n', i);
     	% match (skip first frame)
     	if (i > 1)
     		matches = matchFeatures(desc{i-1}, desc{i}, ...
-                'MatchThreshold', hyperparameters.match_threshold, ... 
-                'MaxRatio', hyperparameters.match_max_ratio, ... 
-                'Unique', hyperparameters.match_unique);
+                'MatchThreshold',   hyperparameters.match_threshold, ... 
+                'MaxRatio',         hyperparameters.match_max_ratio, ... 
+                'Unique',           hyperparameters.match_unique);
     		% plot keypoints that matched
     		plotMatches(matches, datasets.imgs{i-1}, datasets.imgs{i}, kpts{i-1}, kpts{i});
     	end
     	hold off;
     	pause(pause_time);
     end
+    fig_count = fig_count + 1;
 end
