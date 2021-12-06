@@ -12,7 +12,8 @@ function [R, T, P_3D, matched_keypoints_1, matched_keypoints_2, matches] = boots
     % @return(P_3D)             :   3D point cloud of matched points 
     % @return(matched_keypoints_1): matched points in image from camera 1 (with outliers removed)
     % @return(matched_keypoints_2): matched points in image from camera 2 (with outliers removed)
-    % @return(matches)          :   matches matrix (indexPairs) as described on https://www.mathworks.com/help/vision/ref/matchfeatures.html
+    % @return(matches)          :   matches matrix (indexPairs) as described on 
+    %                               https://www.mathworks.com/help/vision/ref/matchfeatures.html
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
     % simplify long var names
