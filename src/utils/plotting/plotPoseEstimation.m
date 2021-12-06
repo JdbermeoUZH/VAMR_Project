@@ -3,7 +3,7 @@ function [] = plotPoseEstimation(P_3D, R_C2_W, T_C2_W, p1, p2, img_1, img_2, fig
 %   Detailed explanation goes here
 %% Visualize the 3-D scene
 figure(fig_num),
-subplot(fig_num,3,1)
+subplot(fig_num,2,1)
 
 % R,T should encode the pose of camera 2, such that M1 = [I|0] and M2=[R|t]
 
@@ -25,16 +25,9 @@ rotate3d on;
 grid
 
 % Display matched points
-subplot(fig_num,3,2)
-imshow(img_1,[]);
-hold on
-plot(p1(1,:), p1(2,:), 'ys');
-title('Image 1')
-
-subplot(fig_num,3,3)
-imshow(img_2,[]);
-hold on
-plot(p2(1,:), p2(2,:), 'ys');
-title('Image 2')
+subplot(fig_num,2,2)
+matchedPoints_1 = [p1(1,:); p1(2,:)]';
+matchedPoints_2 = [p2(1,:); p2(2,:)]';
+showMatchedFeatures(img_1, img_2, matchedPoints_1, matchedPoints_2);
 end
 
