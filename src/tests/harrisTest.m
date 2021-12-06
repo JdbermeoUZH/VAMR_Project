@@ -66,7 +66,7 @@ function [fig_count] = harrisTest(datasets, hyperparameters, fig_count)
                         hyperparameters.descriptor_radius);
 
     matches = matchDescriptors(descriptors_2, descriptors, ... 
-                        hyperparameters.match_lambda)
+                        hyperparameters.match_lambda);
 
     % TODO: PLOTTING MATCHES BROKEN FOR HARRIS
     %figure(fig_count);
