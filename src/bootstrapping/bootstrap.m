@@ -72,8 +72,7 @@ function [R, T, P_3D, matched_keypoints_1, matched_keypoints_2, matches] = boots
     elseif (ransac_algo == "5point")
         %TODO
     end
-
     % Get the essential matrix. We assume K_1=K_2
     [R, T, P_3D] = recoverPoseFromFundamentalMatrix(...
-        F, K, K,matched_keypoints_1, matched_keypoints_2);
+        F, K, K,matched_keypoints_1(inliers>0, :), matched_keypoints_2(inliers>0, :));
 end
