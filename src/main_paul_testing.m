@@ -20,9 +20,9 @@ datasets        = LoadProjectImages(hyperparameters, filepaths);  % get our imag
 % anywhere else! Please do not change anything here ... Pauls workplace
 % only ;) 
 %%%%%%%%%%%%%%%%%%%% change the following according to what you want to test %%%%%%%%%%%%
-test.harris     = true;
-test.bootstrap  = true;
+test.harris     = false;
 test.sift       = false;
+test.bootstrap  = true;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 fig_count       = 1;        % dynamically increase after each new figure
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -49,3 +49,7 @@ if(test.sift)
     fprintf('\n\n Test SIFT \n=====================\n');
     fig_count = siftTest(datasets, hyperparameters, fig_count);
 end
+
+fprintf('\n=============================================================\n');
+fprintf('====================== Testing done ☑️ ======================');
+fprintf('\n=============================================================\n');
