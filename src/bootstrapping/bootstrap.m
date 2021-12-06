@@ -1,5 +1,19 @@
 function [R, T, P_3D, matched_keypoints_1, matched_keypoints_2, matches] = bootstrap(datasets, hyperparameters)
-    % TODO: Documentation
+    % @brief:   depending on the algorithms set in the given hyperparameters we will 
+    %           calculate the rotation, translation and a 3D point cloud of matched keypoints
+    %           between two given images (from datasets). As a bounus we also return all
+    %           matched keypoints (for plotting ... not necessarily needed)
+    %
+    % @param(datasets)          :   datasets variables loaded from LoadProjectImages
+    % @param(hyperparameters)   :   hyperparameters loaded from LoadHyperParams
+    %
+    % @return(R)                :   rotation matrix between two cameras
+    % @return(T)                :   translation vector between two cameras
+    % @return(P_3D)             :   3D point cloud of matched points 
+    % @return(matched_keypoints_1): matched points in image from camera 1 (with outliers removed)
+    % @return(matched_keypoints_2): matched points in image from camera 2 (with outliers removed)
+    % @return(matches)          :   matches matrix (indexPairs) as described on https://www.mathworks.com/help/vision/ref/matchfeatures.html
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
     % simplify long var names
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -72,7 +86,9 @@ function [R, T, P_3D, matched_keypoints_1, matched_keypoints_2, matches] = boots
     elseif (ransac_algo == "5point")
         %TODO
     end
+    matched_keypoints_1 = matched_keypoints_1(inliers>0, :);
+    matched_keypoints_2 = matched_keypoints_2(inliers>0, :);
     % Get the essential matrix. We assume K_1=K_2
     [R, T, P_3D] = recoverPoseFromFundamentalMatrix(...
-        F, K, K,matched_keypoints_1(inliers>0, :), matched_keypoints_2(inliers>0, :));
+        F, K, K,matched_keypoints_1, matched_keypoints_2);
 end
