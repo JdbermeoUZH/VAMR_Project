@@ -1,4 +1,4 @@
-function [] = plotBootstrapOutput(P_3D, R, T, img1, img2, matched_keypoints_1, matched_keypoints_2)
+function [] = plotBootstrapOutput(P_3D, R, T, img1, img2, matched_keypoints_1, matched_keypoints_2, fig_count)
     % TODO: Documentation
     % only used for testing if bootstrapping is not giving us
     % shit but usfull stuff
@@ -12,5 +12,5 @@ function [] = plotBootstrapOutput(P_3D, R, T, img1, img2, matched_keypoints_1, m
     p1 = [p1;ones(1, length(p1))];
     p2 = matched_keypoints_2.';
     p2 = [p2;ones(1, length(p2))];
-    plotPoseEstimation(P_3D_h, R, T, p1, p2, img1, img2, 1);
+    plotPoseEstimation(P_3D_h, R, T, p1, p2, img1, img2, fig_count);
 end
