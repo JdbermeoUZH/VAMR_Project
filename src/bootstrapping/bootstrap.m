@@ -71,6 +71,7 @@ function [R, T, P_3D, matched_keypoints_1, matched_keypoints_2] = bootstrap(data
 
     % Estimate the pose change with ransac
     % choose which ransac algo to use
+    % TODO: make this a function! Might need ransac stuff more often elsewhere
     if(ransac_algo == "8point")
         %% Estimate the pose change with 8-point ransac
         % Get the fundamental matrix
