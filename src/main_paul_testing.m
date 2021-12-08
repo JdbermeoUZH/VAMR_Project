@@ -52,12 +52,27 @@ end
 %% test bootstrapping
 if(test.bootstrap || test.all)
     fprintf('\n\n Test Bootstraping \n=====================\n');
-    % with SIFT test:
+    % with SIFT + Pairwise test:
     hyperparameters.featDetec_algo = "SIFT";
+    hyperparameters.featDetec_matchType = "Pairwise";
     [fig_count, matched_keypoints_1_sift, matched_keypoints_2_sift] = ... 
             bootstrapTest(datasets, hyperparameters, fig_count);
-    % with Harris test:
+    
+    % with SIFT + KLT test:
+    hyperparameters.featDetec_algo = "SIFT";
+    hyperparameters.featDetec_matchType = "KLT";
+    [fig_count, matched_keypoints_1_sift, matched_keypoints_2_sift] = ... 
+            bootstrapTest(datasets, hyperparameters, fig_count);
+    
+    % with Harris + Pairwise test:
     hyperparameters.featDetec_algo = "Harris";
+    hyperparameters.featDetec_matchType = "Pairwise";
+    [fig_count, matched_keypoints_1_harris, matched_keypoints_2_harris] = ... 
+            bootstrapTest(datasets, hyperparameters, fig_count);
+    
+    % with Harris + KLT test:
+    hyperparameters.featDetec_algo = "Harris";
+    hyperparameters.featDetec_matchType = "KLT";
     [fig_count, matched_keypoints_1_harris, matched_keypoints_2_harris] = ... 
             bootstrapTest(datasets, hyperparameters, fig_count);
 end

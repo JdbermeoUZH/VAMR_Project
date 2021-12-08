@@ -14,7 +14,7 @@ function [R, T, P_3D, matched_keypoints_1, matched_keypoints_2] = bootstrap(data
     % @return(matched_keypoints_2): matched points in image from camera 2 (with outliers removed)
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-    % simplify long var names
+    % Simplify long var names
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     img0    = datasets.img0;
     img1    = datasets.img1;
@@ -23,6 +23,8 @@ function [R, T, P_3D, matched_keypoints_1, matched_keypoints_2] = bootstrap(data
     % could also just use hyperparameters.the_thing_to_use in every function 
     featDetec_algo              = hyperparameters.featDetec_algo;
     ransac_algo                 = hyperparameters.ransac_algo;
+    featDetec_matchType         = hyperparameters.featDetec_matchType;
+
     % Harris Stuff
     corner_patch_size           = hyperparameters.corner_patch_size;
     harris_kappa                = hyperparameters.harris_kappa;
@@ -30,14 +32,23 @@ function [R, T, P_3D, matched_keypoints_1, matched_keypoints_2] = bootstrap(data
     nonmaximum_supression_radius= hyperparameters.nonmaximum_supression_radius;
     descriptor_radius           = hyperparameters.descriptor_radius;
     match_lambda                = hyperparameters.match_lambda;
+    
     % SIFT Stuff
     num_scales                  = hyperparameters.sift_num_scales;
     sigma                       = hyperparameters.sift_sigma;
     contrast_threshold          = hyperparameters.sift_contrast_threshold;
-    % Matching Stuff (for SIFT)
+    
+    % Pairwise Matching Stuff
     match_threshold             = hyperparameters.match_threshold;
     match_max_ratio             = hyperparameters.match_max_ratio;
     match_unique                = hyperparameters.match_unique;
+    
+    % KLT Matching Stuff
+    NumPyramidLevels            = hyperparameters.klt_NumPyramidLevels;           
+    MaxBidirectionalError       = hyperparameters.klt_MaxBidirectionalError;        
+    MaxIterations               = hyperparameters.klt_MaxIterations;           
+    BlockSize                   = hyperparameters.klt_BlockSize; 
+
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Lets Go %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -49,24 +60,44 @@ function [R, T, P_3D, matched_keypoints_1, matched_keypoints_2] = bootstrap(data
         [keypoints_1, descriptors_1] = getHarrisFeatures(img0, ...
             corner_patch_size, harris_kappa, num_keypoints, nonmaximum_supression_radius,...
             descriptor_radius);
-        % img1
-        [keypoints_2, descriptors_2] = getHarrisFeatures(img1, ...
-            corner_patch_size, harris_kappa, num_keypoints, nonmaximum_supression_radius,...
-            descriptor_radius);
-        % Create vectors with positions of pixels matched in both frames
-        [matched_keypoints_1, matched_keypoints_2] = getMatchedPoints(...
-            keypoints_2, keypoints_1, descriptors_2, descriptors_1, match_lambda);
+        
+        if (featDetec_matchType == "Pairwise")
+            % img1
+            [keypoints_2, descriptors_2] = getHarrisFeatures(img1, ...
+                corner_patch_size, harris_kappa, num_keypoints, nonmaximum_supression_radius,...
+                descriptor_radius);
+            % Create vectors with positions of pixels matched in both frames
+            [matched_keypoints_1, matched_keypoints_2] = getMatchedPoints(...
+                keypoints_2, keypoints_1, descriptors_2, descriptors_1, match_lambda);
+        
+        elseif (featDetec_matchType == "KLT")
+            keypoints_1 = keypoints_1.';
+            [matched_keypoints_1, matched_keypoints_2] = ...
+                getKLTMatches(img0, keypoints_1, img1, ...
+                              NumPyramidLevels, MaxBidirectionalError, ...
+                              MaxIterations, BlockSize);
+        end
+            
     elseif (featDetec_algo == "SIFT")
         % img0
         [keypoints_1, descriptors_1] = sift(img0, ...
             num_scales, sigma, contrast_threshold);
-        % img1
-        [keypoints_2, descriptors_2] = sift(img1, ...
-            num_scales, sigma, contrast_threshold);
-        % Create vectors with positions of pixels matched in both frames
-        [matched_keypoints_1, matched_keypoints_2] = getMatchedPoints_sift(...
-            keypoints_2, keypoints_1, descriptors_2, descriptors_1, ...
-            match_threshold, match_max_ratio, match_unique);
+
+        if (featDetec_matchType == "Pairwise")
+            % img1
+            [keypoints_2, descriptors_2] = sift(img1, ...
+                num_scales, sigma, contrast_threshold);
+            % Create vectors with positions of pixels matched in both frames
+            [matched_keypoints_1, matched_keypoints_2] = getMatchedPoints_sift(...
+                keypoints_2, keypoints_1, descriptors_2, descriptors_1, ...
+                match_threshold, match_max_ratio, match_unique);
+
+        elseif (featDetec_matchType == "KLT")
+            [matched_keypoints_1, matched_keypoints_2] = ...
+                getKLTMatches(img0, keypoints_1, img1, ...
+                              NumPyramidLevels, MaxBidirectionalError, ...
+                              MaxIterations, BlockSize);
+        end
     end
 
     % Estimate the pose change with ransac
