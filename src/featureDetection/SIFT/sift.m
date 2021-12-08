@@ -13,4 +13,6 @@ function [kpts, desc] = sift(image, num_scales, sigma, contrast_threshold)
 
 	kp 				= detectSIFTFeatures(image, Sigma=sigma, NumLayersInOctave=num_scales, ContrastThreshold=contrast_threshold);
 	[desc, kpts] 	= extractFeatures(image, kp.Location);
+	% flip coordinates because we want [u v] and not [v u]
+	kpts			= round([kpts(:,2), kpts(:,1)]);
 end

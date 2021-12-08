@@ -25,7 +25,7 @@ function [R,T, P_3D] = disambiguateRelativePose(Rots,u3,points0_h,points1_h,K1,K
 M1 = K1 * eye(3,4); % Projection matrix of camera 1
 
 total_points_in_front_best = 0;
-for iRot = 1:2
+for iRot = 1:size(Rots, 3)
     R_C2_C1_test = Rots(:,:,iRot);
     
     for iSignT = 1:2
