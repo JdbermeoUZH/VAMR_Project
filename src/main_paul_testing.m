@@ -23,7 +23,8 @@ datasets        = LoadProjectImages(hyperparameters, filepaths);  % get our imag
 %%%%%%%%%%%%%%%%%%%% change the following according to what you want to test %%%%%%%%%%%%
 test.harris     = false;
 test.sift       = false;
-test.bootstrap  = true;
+test.bootstrap  = false;
+test.contOp     = true;
 
 test.all        = false;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -75,6 +76,13 @@ if(test.bootstrap || test.all)
     hyperparameters.featDetec_matchType = "KLT";
     [fig_count, matched_keypoints_1_harris, matched_keypoints_2_harris] = ... 
             bootstrapTest(datasets, hyperparameters, fig_count);
+end
+
+%% test Continous Operation
+if(test.contOp || test.all)
+    fprintf('\n\n Test Continous Operation \n=====================\n');
+    fig_count = continousPoseEstimationTest( ...
+        datasets, hyperparameters, fig_count);
 end
 
 fprintf('\n=============================================================\n');

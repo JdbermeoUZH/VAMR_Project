@@ -2,11 +2,14 @@ function [hyperparameters] = LoadHyperParams()
 
 %% Run params
 hyperparameters.test					= true;         % Only run the test_range frames in 
-hyperparameters.test_range				= 30;           % Number of frames to run the test
-
+hyperparameters.test_range				= 100;           % Number of frames to run the test
 %% bootstraping
 hyperparameters.bootstrap_frames		= [1 3];
 hyperparameters.ransac_algo             = "8point";     % Which algo to use to estimate 3D point cloud
+%% hyperparams 8point
+hyperparameters.eightPointNumTrials     = 30000;        % Default is 500, but acutal NumTrials changes with chose confidence
+hyperparameters.eightPointDistanceThreshold = 0.01;     % Default is 0.01
+hyperparameters.eightPointConfidence    = 99;           % Default is 99. The higher, the more iterations it requires
 %% hyperparams Feature detection
 hyperparameters.featDetec_algo          = "SIFT";       % "Harris" or "SIFT"
 hyperparameters.featDetec_matchType     = "KLT";        % "KLT" or "Pairwise"
@@ -30,5 +33,6 @@ hyperparameters.klt_BlockSize           = [31, 31];     % Default is [31, 31]. S
 hyperparameters.match_threshold			= 100;			% 100,
 hyperparameters.match_max_ratio			= 0.7;			% 0.7,
 hyperparameters.match_unique			= true;			% true,
-
+%% hypeparameters continous operation
+hyperparameters.poseEstimationAlgo      = "8point";     % "8point" or "P3P"
 end
