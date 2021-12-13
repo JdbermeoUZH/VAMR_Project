@@ -6,10 +6,11 @@ clear all       % lets start over :)
 addpath('utils/recoverPoseFromFundMatrix/');% some utility functions (mostly long function names)
 addpath('utils/plotting/');                 % some utility functions (mostly plotting)
 addpath('utils/triangulation/');            % some utility functions (mostly triangulation)
-addpath('setup/');		                    % project setup (hyperparams, loading images, ...)
+addpath('setup/');		            % project setup (hyperparams, loading images, ...)
 addpath('featureDetection/Harris/');        % Harris
 addpath('featureDetection/SIFT/');          % SIFT
 addpath('featureMatching/pairwiseFeatureDescriptorComparisson/');     % matching stuff (mostly for SIFT)
+addpath('featureMatching/KLT');             % matching stuff (mostly for SIFT)
 addpath('bootstrapping/');                  % yeah bootstrap hurray
 addpath('tests/');                          % super cool testing
 % Load stuff
@@ -23,8 +24,8 @@ datasets        = LoadProjectImages(hyperparameters, filepaths);  % get our imag
 %%%%%%%%%%%%%%%%%%%% change the following according to what you want to test %%%%%%%%%%%%
 test.harris     = false;
 test.sift       = false;
-test.bootstrap  = false;
-test.contOp     = true;
+test.bootstrap  = true;
+test.contOp     = false;
 
 test.all        = false;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
