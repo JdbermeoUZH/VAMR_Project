@@ -3,7 +3,7 @@ function [] = plotPoseEstimation(P_3D, R_C2_W, T_C2_W, p1, p2, img_1, img_2, fig
 %   Detailed explanation goes here
 %% Visualize the 3-D scene
 figure(fig_num),
-subplot(fig_num,2,1)
+subplot(1,2,1)
 
 % R,T should encode the pose of camera 2, such that M1 = [I|0] and M2=[R|t]
 
@@ -30,7 +30,7 @@ grid
 hold off
 
 % Display matched points
-subplot(fig_num,2,2)
+subplot(1,2,2)
 % flip because showMatchedFeatures somwhow expects that
 matchedPoints_1 = [p1(2,:); p1(1,:)]';
 matchedPoints_2 = [p2(2,:); p2(1,:)]';
