@@ -14,5 +14,9 @@ matches = matchDescriptors(query_descriptors, database_descriptors, lambda);
 matched_keypoints_query = query_keypoint_location(:, matches > 0).';
 matched_keypoints_database = database_keypoint_location(:, matches(matches > 0)).';
 
+% Hacky fix for flipped coordinates
+matched_keypoints_query = [matched_keypoints_query(:,2), matched_keypoints_query(:,1)];
+matched_keypoints_database = [matched_keypoints_database(:,2), matched_keypoints_database(:,1)];
+
 end
 

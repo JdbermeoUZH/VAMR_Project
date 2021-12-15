@@ -5,6 +5,11 @@ function [kpts, desc] = sift(image, num_scales, sigma, contrast_threshold)
 	% @param(num_scales)			: number of scales to use 
 	% @param(sigma)					: sigam value as learned in lecture
 	% @param(contrast_threshold)	: contrast threshold 
+	%
+	% @output(kpts)					: num_kpts x 2
+	% @output(desc)					: not sure about dim (TODO) but its basically
+	%								  the one from Matlab: 
+	%								  https://ch.mathworks.com/help/vision/ref/extractfeatures.html
 	% 
 	% for more info on hyperparam (because I wasnt relly specific here):
 	% https://ch.mathworks.com/help/vision/ref/siftpoints.html
@@ -13,6 +18,5 @@ function [kpts, desc] = sift(image, num_scales, sigma, contrast_threshold)
 
 	kp 				= detectSIFTFeatures(image, Sigma=sigma, NumLayersInOctave=num_scales, ContrastThreshold=contrast_threshold);
 	[desc, kpts] 	= extractFeatures(image, kp.Location);
-	% flip coordinates because we want [u v] and not [v u]
-	kpts			= round([kpts(:,2), kpts(:,1)]);
+	kpts			= round(kpts);
 end

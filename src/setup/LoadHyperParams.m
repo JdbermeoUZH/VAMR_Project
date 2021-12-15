@@ -16,7 +16,7 @@ hyperparameters.featDetec_matchType     = "KLT";        % "KLT" or "Pairwise"
 %% hyperparameters SIFT
 hyperparameters.sift_num_scales 		= 4; 			% 3, 	Scales per octave (num octaves is calculated automatically).
 hyperparameters.sift_sigma 				= 1.6;			% 1,    1.6 is recommended in paper (TODO: search for link)
-hyperparameters.sift_contrast_threshold	= 0.03;			% 0.04, 0.02 gives more features (and still looks acceptable)
+hyperparameters.sift_contrast_threshold	= 0.003;			% 0.04, 0.02 gives more features (and still looks acceptable)
 %% hypeparameters Harris (TODO: make naming consistent e.g. start with "harris_")
 hyperparameters.corner_patch_size       = 9;            %9,
 hyperparameters.harris_kappa            = 0.12;         %0.08,  between 0.04 and 0.15 smaller seems better on parking lot. lesson 5 slide 47

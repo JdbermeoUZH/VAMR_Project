@@ -6,9 +6,19 @@ function [matched_keypoints_query,matched_keypoints_database, matches] = getMatc
     % @param(keypoints_database)
     % @param(descriptors_query)
     % @param(descriptors_database)      TODO
-    % @param(match_threshold)
-    % @param(match_max_ratio)
+    % @param(match_threshold)               or just google the matlab implementation 
+    % @param(match_max_ratio)               of matchFeatures
     % @param(match_unique)
+    %
+    % @output(matched_keypoints_query)      num_matched_points x 2
+    %                                       [u v] locations of matched points in 
+    %                                       query image
+    % @output(matched_keypoints_database)   num_matched_points x 2
+    %                                       [u v] locations of matched points in 
+    %                                       database image
+    % @output(matches)                      num_matched_points x 2
+    %                                       index matching of both image keypoint
+    %                                       entries
 
     % get matches using matlabs cool functions
     matches                     = matchFeatures(descriptors_query, descriptors_database, 'MatchThreshold', match_threshold, 'MaxRatio', match_max_ratio, 'Unique', match_unique);
