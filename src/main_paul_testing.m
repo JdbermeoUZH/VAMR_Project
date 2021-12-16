@@ -12,6 +12,7 @@ addpath('featureDetection/SIFT/');          % SIFT
 addpath('featureMatching/pairwiseFeatureDescriptorComparisson/');     % matching stuff (mostly for SIFT)
 addpath('featureMatching/KLT');             % matching stuff (mostly for SIFT)
 addpath('bootstrapping/');                  % yeah bootstrap hurray
+addpath('continuousOperation');             % for the smoooooooth position tracking
 addpath('tests/');                          % super cool testing
 % Load stuff
 filepaths       = LoadFilePaths();          % get paths to datasets
@@ -24,8 +25,8 @@ datasets        = LoadProjectImages(hyperparameters, filepaths);  % get our imag
 %%%%%%%%%%%%%%%%%%%% change the following according to what you want to test %%%%%%%%%%%%
 test.harris     = false;
 test.sift       = false;
-test.bootstrap  = true;
-test.contOp     = false;
+test.bootstrap  = false;
+test.contOp     = true;
 
 test.all        = false;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
