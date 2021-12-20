@@ -10,6 +10,7 @@ addpath('setup/');		            % project setup (hyperparams, loading images, ..
 addpath('featureDetection/Harris/');        % Harris
 addpath('featureDetection/SIFT/');          % SIFT
 addpath('featureMatching/pairwiseFeatureDescriptorComparisson/');     % matching stuff (mostly for SIFT)
+addpath('continuousOperation/');
 addpath('featureMatching/KLT');             % matching stuff (mostly for SIFT)
 addpath('bootstrapping/');                  % yeah bootstrap hurray
 addpath('tests/');                          % super cool testing
