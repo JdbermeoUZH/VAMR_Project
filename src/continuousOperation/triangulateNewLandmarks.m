@@ -48,6 +48,7 @@ State.C(remove_filter,:)=[];
 State.F(remove_filter,:)=[];
 State.T(remove_filter,:)=[];
 
+% TODO  call harris or sift that are alredy implemented
 %Get the new candidate keypoints in current frame
 new_candidate_keypoints = detectHarrisFeatures(I_curr, ...
                                 'MinQuality', hyperparameters.MinQuality, ...
