@@ -20,8 +20,7 @@ hyperparameters = LoadHyperParams();        % change ALL params here (no param s
 datasets        = LoadProjectImages(hyperparameters, filepaths);  % get our images! 😎
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Note: this is a file to test functions! not to be used and loaded
-% anywhere else! Please do not change anything here ... Pauls workplace
-% only ;) 
+% anywhere else!
 %%%%%%%%%%%%%%%%%%%% change the following according to what you want to test %%%%%%%%%%%%
 test.harris     = false;
 test.sift       = false;
