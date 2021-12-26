@@ -9,6 +9,7 @@ addpath('utils/triangulation/');            % some utility functions (mostly tri
 addpath('setup/');		            % project setup (hyperparams, loading images, ...)
 addpath('featureDetection/Harris/');        % Harris
 addpath('featureDetection/SIFT/');          % SIFT
+addpath('featureDetection/');               % general feature detection
 addpath('featureMatching/pairwiseFeatureDescriptorComparisson/');     % matching stuff (mostly for SIFT)
 addpath('continuousOperation/');
 addpath('featureMatching/KLT');             % matching stuff (mostly for SIFT)
@@ -76,7 +77,7 @@ if(test.bootstrap || test.all)
     hyperparameters.featDetec_algo = "Harris";
     hyperparameters.featDetec_matchType = "KLT";
     [fig_count, matched_keypoints_1_harris, matched_keypoints_2_harris] = ... 
-            bootstrapTest(datasets, hyperparameters, fig_count);
+            bootstrapTest(datasets, hyperparameters, fig_count); % This one fails ... don't know why (paul)
 end
 
 %% test Continous Operation
