@@ -8,7 +8,7 @@ function [R,T, P_3D] = recoverPoseFromFundamentalMatrix(...
 %   Disambiguate the actual rotation and translation
 
 % Get essential matrix from fundamental matrix
-E = (K_2^(-1)).' * F * K_1^(-1);
+E = (K_2).' * F * K_1;
 
 % Decompose the Essential matrix to possible rots and translations
 [PossibleRotations, PossibleTranslations] = decomposeEssentialMatrix(E);
