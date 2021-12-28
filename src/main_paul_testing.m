@@ -1,4 +1,3 @@
-
 clear all       % lets start over :) 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % setup testing environment
@@ -6,14 +5,22 @@ clear all       % lets start over :)
 addpath('utils/recoverPoseFromFundMatrix/');% some utility functions (mostly long function names)
 addpath('utils/plotting/');                 % some utility functions (mostly plotting)
 addpath('utils/triangulation/');            % some utility functions (mostly triangulation)
+
 addpath('setup/');		            % project setup (hyperparams, loading images, ...)
+
 addpath('featureDetection/Harris/');        % Harris
 addpath('featureDetection/SIFT/');          % SIFT
 addpath('featureDetection/');               % general feature detection
+
 addpath('featureMatching/pairwiseFeatureDescriptorComparisson/');     % matching stuff (mostly for SIFT)
-addpath('continuousOperation/');
 addpath('featureMatching/KLT');             % matching stuff (mostly for SIFT)
+
+addpath('ransac/');
+
+addpath('continuousOperation/');
+
 addpath('bootstrapping/');                  % yeah bootstrap hurray
+
 addpath('tests/');                          % super cool testing
 % Load stuff
 filepaths       = LoadFilePaths();          % get paths to datasets
@@ -56,28 +63,9 @@ end
 if(test.bootstrap || test.all)
     fprintf('\n\n Test Bootstraping \n=====================\n');
     % with SIFT + Pairwise test:
-    hyperparameters.featDetec_algo = "SIFT";
-    hyperparameters.featDetec_matchType = "Pairwise";
-    [fig_count, matched_keypoints_1_sift, matched_keypoints_2_sift] = ... 
+    [fig_count, matched_keypoints_1_sift, matched_keypoints_2_sift, P_3D] = ... 
             bootstrapTest(datasets, hyperparameters, fig_count);
     
-    % with SIFT + KLT test:
-    hyperparameters.featDetec_algo = "SIFT";
-    hyperparameters.featDetec_matchType = "KLT";
-    [fig_count, matched_keypoints_1_sift, matched_keypoints_2_sift] = ... 
-            bootstrapTest(datasets, hyperparameters, fig_count);
-    
-    % with Harris + Pairwise test:
-    hyperparameters.featDetec_algo = "Harris";
-    hyperparameters.featDetec_matchType = "Pairwise";
-    [fig_count, matched_keypoints_1_harris, matched_keypoints_2_harris] = ... 
-            bootstrapTest(datasets, hyperparameters, fig_count);
-    
-    % with Harris + KLT test:
-    hyperparameters.featDetec_algo = "Harris";
-    hyperparameters.featDetec_matchType = "KLT";
-    [fig_count, matched_keypoints_1_harris, matched_keypoints_2_harris] = ... 
-            bootstrapTest(datasets, hyperparameters, fig_count); % This one fails ... don't know why (paul)
 end
 
 %% test Continous Operation
