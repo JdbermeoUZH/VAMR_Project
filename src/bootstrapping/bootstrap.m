@@ -50,6 +50,9 @@ function [R, T, P_3D, matched_keypoints_1, matched_keypoints_2] = bootstrap(data
             getKLTMatches(img0, keypoints_1, img1, ...
                           NumPyramidLevels, MaxBidirectionalError, ...
                           MaxIterations, BlockSize);
+    else
+        % output error
+        error('The given feature detection method is not valid');
     end
 
     % Estimate the pose change with ransac
