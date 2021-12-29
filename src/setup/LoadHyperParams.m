@@ -11,7 +11,7 @@ hyperparameters.eightPointDistanceThreshold = 0.01;     % Default is 0.01
 hyperparameters.eightPointConfidence    = 99;           % Default is 99. The higher, the more iterations it requires
 %% hyperparams Feature detection
 hyperparameters.featDetec_algo          = "SIFT";       % "Harris" or "SIFT"
-hyperparameters.featDetec_matchType     = "Pairwise";   % "KLT" or "Pairwise"
+hyperparameters.featDetec_matchType     = "KLT";   % "KLT" or "Pairwise"
 %% hyperparameters SIFT
 hyperparameters.sift_num_scales 		= 4; 			% 3, 	Scales per octave (num octaves is calculated automatically).
 hyperparameters.sift_sigma 				= 1.6;			% 1,    1.6 is recommended in paper (TODO: search for link)

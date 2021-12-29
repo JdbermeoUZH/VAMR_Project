@@ -1,4 +1,4 @@
-function [R, T, P_3D, matched_keypoints_1, matched_keypoints_2] = bootstrap(datasets, hyperparameters)
+function [R, T, P_3D, matchedInliers1, matchedInliers2] = bootstrap(datasets, hyperparameters)
     % @brief:   depending on the algorithms set in the given hyperparameters we will 
     %           calculate the rotation, translation and a 3D point cloud of matched keypoints
     %           between two given images (from datasets). As a bounus we also return all
@@ -10,8 +10,8 @@ function [R, T, P_3D, matched_keypoints_1, matched_keypoints_2] = bootstrap(data
     % @return(R)                :   rotation matrix between two cameras
     % @return(T)                :   translation vector between two cameras
     % @return(P_3D)             :   3D point cloud of matched points 
-    % @return(matched_keypoints_1): matched points in image from camera 1 (with outliers removed)
-    % @return(matched_keypoints_2): matched points in image from camera 2 (with outliers removed)
+    % @return(matched_keypoints_1): matched (inlier) points in image from camera 1 (with outliers removed)
+    % @return(matched_keypoints_2): matched (inlier) points in image from camera 2 (with outliers removed)
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
     % Simplify long var names
