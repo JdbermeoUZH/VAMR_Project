@@ -14,7 +14,7 @@ x = [twist_guess; scale_guess];
 % Using an external error function for nicer code. Binding pp_G_C and p_V_C
 % by casting the function as a function of the hidden state only.
 error_terms = @(x) alignError(x, pp_G_C, p_V_C);
-options = optimoptions(@lsqnonlin, 'Display', 'iter');
+options = optimoptions(@lsqnonlin, 'Display', 'off');
 x_optim = lsqnonlin(error_terms, x, [], [], options);
 
 T_G_V = twist2HomogMatrix(x_optim(1:6));

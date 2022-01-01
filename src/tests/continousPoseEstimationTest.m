@@ -55,7 +55,6 @@ function [fig_count] = continousPoseEstimationTest(datasets, hyperparameters, fi
         T_wc_before = T_wc_now;
     end
 
-    disp('hallo')
     %% Report Error in estimation of trajectory
     fig_count = reportTrajectoryError(poses, datasets.ground_truth, fig_count);
 

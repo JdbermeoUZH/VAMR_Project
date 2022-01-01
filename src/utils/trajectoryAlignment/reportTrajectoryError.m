@@ -8,7 +8,7 @@ function [fig_count] = reportTrajectoryError(poses, poses_ground_truth, fig_coun
     estimated_xyz = poses(:, [end-8 end-4 end]).';  %x, y, z coordinates of estimated pose
     ground_truth_xyz = poses_ground_truth(1:length(estimated_xyz), :);
     ground_truth_xyz = [ground_truth_xyz, zeros(length(ground_truth_xyz), 1)].';
-    estimated_xyz = alignEstimateToGroundTruth(ground_truth_xyz, estimated_xyz);
+    estimated_xyz = umeyama(estimated_xyz, ground_truth_xyz);
 
     % Calculate ATE
     ATE = sqrt(mean((estimated_xyz - ground_truth_xyz).^2, 'all'));
