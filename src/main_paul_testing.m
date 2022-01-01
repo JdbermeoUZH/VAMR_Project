@@ -62,8 +62,7 @@ end
 %% test bootstrapping
 if(test.bootstrap || test.all)
     fprintf('\n\n Test Bootstraping \n=====================\n');
-    % with SIFT + Pairwise test:
-    [fig_count, matched_keypoints_1_sift, matched_keypoints_2_sift, P_3D] = ... 
+    [fig_count, matched_keypoints_1, matched_keypoints_2, P_3D] = ... 
             bootstrapTest(datasets, hyperparameters, fig_count);
     
 end
