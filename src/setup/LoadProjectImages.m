@@ -1,4 +1,4 @@
-function [dataset] = LoadProjectImage(hyperparameters, filepaths)
+function [dataset] = LoadProjectImages(hyperparameters, filepaths)
 
 % filepaths
 ds          = filepaths.ds;
@@ -14,8 +14,8 @@ bootstrap_frames    = hyperparameters.bootstrap_frames;
 if ds == 0
     % need to set kitti_path to folder containing "05" and "poses"
     assert(exist('kitti_path', 'var') ~= 0);
-    ground_truth = load([kitti_path '/poses/05.txt']);
-    ground_truth = ground_truth(:, [end-8 end]);
+    dataset.ground_truth = load([kitti_path '/poses/05.txt']);
+    dataset.ground_truth = dataset.ground_truth(:, [end-8 end]);
     last_frame = 4540;
     dataset.K = [7.188560000000e+02 0 6.071928000000e+02
         0 7.188560000000e+02 1.852157000000e+02
@@ -36,8 +36,8 @@ elseif ds == 2
     last_frame = 598;
     dataset.K = load([parking_path '/K.txt']);
 
-    ground_truth = load([parking_path '/poses.txt']);
-    ground_truth = ground_truth(:, [end-8 end]);
+    dataset.ground_truth = load([parking_path '/poses.txt']);
+    dataset.ground_truth = dataset.ground_truth(:, [end-8 end]);
 else
     assert(false);
 end

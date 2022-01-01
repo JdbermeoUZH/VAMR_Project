@@ -71,7 +71,7 @@ end
 %% test Continous Operation
 if(test.contOp || test.all)
     fprintf('\n\n Test Continous Operation \n=====================\n');
-    [fig_count, poses]  = continousPoseEstimationTest( ...
+    [fig_count]  = continousPoseEstimationTest( ...
         datasets, hyperparameters, fig_count);
 end
 

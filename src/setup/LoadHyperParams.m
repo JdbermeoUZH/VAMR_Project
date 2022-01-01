@@ -2,7 +2,7 @@ function [hyperparameters] = LoadHyperParams()
 
 %% Run params
 hyperparameters.test					= true;         % Only run the test_range frames in 
-hyperparameters.test_range				= 3;           % Number of frames to run the test
+hyperparameters.test_range				= 50;           % Number of frames to run the test
 %% bootstraping
 hyperparameters.bootstrap_frames		= [1 3];
 %% hyperparams 8point
