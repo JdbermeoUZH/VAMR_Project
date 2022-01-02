@@ -55,8 +55,9 @@ function [fig_count] = continousPoseEstimationTest(datasets, hyperparameters, fi
         T_wc_before = T_wc_now;
     end
 
-    %% Report Error in estimation of trajectory
-    fig_count = reportTrajectoryError(poses, datasets.ground_truth, fig_count);
+    %% Report Error in estimation of trajectory before BA
+    fig_count = reportTrajectoryError(poses, datasets.ground_truth, ...
+        'Error Measurements on translation without BA', fig_count);
 
 end
 
