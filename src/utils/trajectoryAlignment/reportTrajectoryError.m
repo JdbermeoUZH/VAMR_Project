@@ -1,12 +1,18 @@
-function [fig_count] = reportTrajectoryError(poses, poses_ground_truth, figure_grid_title, fig_count)
+function [fig_count] = reportTrajectoryError(poses, poses_ground_truth, dataset, figure_grid_title, fig_count)
 %REPORTTRAJECTORYERROR Summary of this function goes here
 %   Detailed explanation goes here
+    
     %% Report ATE 
     % First we need to align the estimated and ground truth trajectories
-    estimated_xyz = poses(:, [end-8 end-4 end]).';  %x, y, z coordinates of estimated pose
-    ground_truth_xyz = poses_ground_truth(1:length(estimated_xyz), :);
-    ground_truth_xyz = [ground_truth_xyz, zeros(length(ground_truth_xyz), 1)].';
-    estimated_xyz_aligned = umeyama(estimated_xyz, ground_truth_xyz);
+    if(dataset == 2 || dataset == 0) % Kitti or Parking datasets
+        estimated_xyz = poses(:, [end-8 end-4 end]).';  %x, y, z coordinates of estimated pose
+        ground_truth_xyz = poses_ground_truth(1:length(estimated_xyz), :);
+        ground_truth_xyz = [ground_truth_xyz, zeros(length(ground_truth_xyz), 1)].';
+        estimated_xyz_aligned = umeyama(estimated_xyz, ground_truth_xyz);
+    
+    elseif(dataset == 1) % Malaga dataset 
+        disp('Figure out criteria to choose poses to do the comparisson')
+    end
 
     % Calculate ATE
     ATE = sqrt(mean((estimated_xyz_aligned - ground_truth_xyz).^2, 'all'));

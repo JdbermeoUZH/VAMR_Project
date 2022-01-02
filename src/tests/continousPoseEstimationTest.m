@@ -56,7 +56,9 @@ function [fig_count] = continousPoseEstimationTest(datasets, hyperparameters, fi
     end
 
     %% Report Error in estimation of trajectory before BA
-    fig_count = reportTrajectoryError(poses, datasets.ground_truth, ...
+    % first remove the poses line of the frames that were not included in
+    % the first bootstrapping
+    fig_count = reportTrajectoryError(poses, datasets.ground_truth, datasets.ds, ...
         'Error Measurements on translation without BA', fig_count);
 
 end
