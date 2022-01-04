@@ -3,11 +3,16 @@ function State = triangulateNewLandmarks(Image_now, Image_before, State, T_wc_no
 
 %Dsicard the failed track points and update the candidate keypoints
 if size(State.C)>0
-    [~, candidate_now, validity] = getKLTMatches( ...
-    Image_before, State.C, Image_now, ...
-    hyperparameters.klt_NumPyramidLevels, ...
-    hyperparameters.klt_MaxBidirectionalError, ...
-    hyperparameters.klt_MaxIterations, hyperparameters.klt_BlockSize);
+    
+    point_tracker = vision.PointTracker('MaxBidirectionalError', hyperparameters.max_bilinear_error_klt, ...
+                                       'NumPyramidLevels', hyperparameters.num_pyramid_levels, ...
+                                       'BlockSize', hyperparameters.block_size, ...
+                                       'MaxIterations', hyperparameters.max_iteration);
+
+    initialize(point_tracker, State.C, Image_before); 
+
+    
+    [candidate_now, validity] = point_tracker(Image_now);
 
     State.C = candidate_now(validity,:);
     State.F = State.F(validity,:);
@@ -19,7 +24,7 @@ T_cw_now = invt([T_wc_now;0 0 0 1]);  %world to current camera pose -->4*4
 %landmark and fulfill the threshold condition
 remove_filter = [];
 
-for i=size(State.C,1)
+for i=1:size(State.C,1)
     %wolrd to camera projection matrix of current frame
     Matrix1 = K*T_cw_now(1:3,:); % 3*4
     T_wc_first = reshape(State.T(i,:),3,4);
@@ -37,9 +42,9 @@ for i=size(State.C,1)
     alpha = acos(dot(bearing_vector_c', bearing_vector_f')/(norm(bearing_vector_c')*...
             norm(bearing_vector_f')));
     %Filter to get the alpha larger than threshold
-    if(alpha > hyperparameters.angle_threshold)
+    if(alpha > hyperparameters.bearing_angle_threshold)
         remove_filter = [remove_filter,i];
-        State.X = [State.X;new_landmark'];
+        State.X = [State.X;new_landmark(1:3)'];
         State.P = [State.P;State.C(i,:)];   
     end
 end
@@ -48,27 +53,30 @@ State.C(remove_filter,:)=[];
 State.F(remove_filter,:)=[];
 State.T(remove_filter,:)=[];
 
-% TODO  call harris or sift that are alredy implemented
 %Get the new candidate keypoints in current frame
-new_candidate_keypoints = detectHarrisFeatures(I_curr, ...
-                                'MinQuality', hyperparameters.MinQuality, ...
+new_candidate_keypoints = detectHarrisFeatures(Image_now, ...
+                                'MinQuality', hyperparameters.min_quality, ...
                                 'ROI', hyperparameters.ROI, ...
-                                'FilterSize', hyperparameters.FilterSize);
+                                'FilterSize', hyperparameters.corner_patch_size);
 %Get the location in the image
 new_keypoints_image = new_candidate_keypoints.Location; % #of_new_keypoints * 2
 
 distance_p = pdist2(State.P, new_keypoints_image, 'squaredeuclidean', 'Smallest', 1);
-distance_c = pdist2(State.C, new_keypoints_image, 'squaredeuclidean', 'Smallest', 1);
-%Get the cancidate keypoints that are far from current keypoints
-new_candidate_keypoints = new_keypoints_image(distance_p > hyperparameters.keypoint_threshold... 
-                                              & distance_c > hyperparameters.keypoint_threshold,:);
+if size(State.C)>0
+    distance_c = pdist2(State.C, new_keypoints_image, 'squaredeuclidean', 'Smallest', 1);
+    %Get the cancidate keypoints that are far from current keypoints
+    new_candidate_keypoints = new_keypoints_image(distance_p > hyperparameters.new_candidate_keypoints_dist_thresh... 
+                                              & distance_c > hyperparameters.new_candidate_keypoints_dist_thresh,:);
+else 
+    new_candidate_keypoints = new_keypoints_image(distance_p > hyperparameters.new_candidate_keypoints_dist_thresh,:);
+end
 
 if size(new_candidate_keypoints,1) ~= 0
     %update the State
     State.C = [State.C; new_candidate_keypoints];
     State.F = [State.F; new_candidate_keypoints];
     vec_T_wc_now = reshape(T_wc_now,1,12);
-    State.T = cat(1, State.T, repmat(vec_T_wc_now, size(C_new, 1), 1));
+    State.T = cat(1, State.T, repmat(vec_T_wc_now, size(new_candidate_keypoints, 1), 1));
 end
 
 

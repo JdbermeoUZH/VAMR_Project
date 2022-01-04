@@ -5,13 +5,30 @@ function [State_now, T_wc_now, State_before] = estimateCurrentPose( ...
 % T_wc_before: 3*4 matrix of previous camera pose w.r.t world
 
 %Using KLT to match the keypoints
-[keypoints_before, keypoints_now, validity] = getKLTMatches( ...
-    Image_before, State_before.P, Image_now, ...
-    hyperparameters.klt_NumPyramidLevels, ...
-    hyperparameters.klt_MaxBidirectionalError, ...
-    hyperparameters.klt_MaxIterations, hyperparameters.klt_BlockSize);
+%[keypoints_before, keypoints_now, validity] = getKLTMatches( ...
+    %Image_before, State_before.P, Image_now, ...
+    %hyperparameters.klt_NumPyramidLevels, ...
+    %hyperparameters.klt_MaxBidirectionalError, ...
+    %hyperparameters.klt_MaxIterations, hyperparameters.klt_BlockSize);
 
-landmarks_now = State_before.X(validity,:); 
+%landmarks_now = State_before.X(validity,:); 
+
+kp_0 = State_before.P;
+landmarks_0 = State_before.X;
+
+pointTracker = vision.PointTracker('MaxBidirectionalError', hyperparameters.klt_MaxBidirectionalError, ...
+                                   'NumPyramidLevels', hyperparameters.klt_NumPyramidLevels, ...
+                                   'BlockSize', hyperparameters.klt_BlockSize, ...
+                                   'MaxIterations', hyperparameters.klt_MaxIterations);
+                               
+initialize(pointTracker, kp_0, Image_before);     
+
+[kp_1_valid, isValid] = pointTracker(Image_now);
+keypoints_now = kp_1_valid(isValid,:);             
+landmarks_now = landmarks_0(isValid,:); 
+keypoints_before = kp_0(isValid,:);
+
+release(pointTracker)
 
 if (hyperparameters.poseEstimationAlgo == "8point")
     %8 points algorithms with RANSAC
@@ -20,7 +37,7 @@ if (hyperparameters.poseEstimationAlgo == "8point")
         'Method','RANSAC',...
         'NumTrials', hyperparameters.eightPointNumTrials, ...
         'DistanceThreshold', hyperparameters.eightPointDistanceThreshold,...
-        'Confidence', 90);%hyperparameters.eightPointConfidence);
+        'Confidence', hyperparameters.eightPointConfidence);%hyperparameters.eightPointConfidence);
     
     %Filter inliers
     inliers_before = keypoints_before(inliersIndex,:);
@@ -45,6 +62,9 @@ if (hyperparameters.poseEstimationAlgo == "8point")
     State_before.P = inliers_before(:,1:2); %-->N*2
     State_now.P = inliers_now(:,1:2);       %-->N*2
     State_now.X = landmarks_now;
+    State_now.F = State_before.F;
+    State_now.C = State_before.C;
+    State_now.T = State_before.T;
 
 elseif (hyperparameters.poseEstimationAlgo == "P3P")
     disp('Do P3PRansac')
