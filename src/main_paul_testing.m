@@ -5,6 +5,7 @@ clear all       % lets start over :)
 addpath('utils/recoverPoseFromFundMatrix/');% some utility functions (mostly long function names)
 addpath('utils/plotting/');                 % some utility functions (mostly plotting)
 addpath('utils/triangulation/');            % some utility functions (mostly triangulation)
+addpath('utils/trajectoryAlignment/');      % some utility functions
 
 addpath('setup/');		            % project setup (hyperparams, loading images, ...)
 
