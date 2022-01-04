@@ -32,8 +32,8 @@ datasets        = LoadProjectImages(hyperparameters, filepaths);  % get our imag
 %%%%%%%%%%%%%%%%%%%% change the following according to what you want to test %%%%%%%%%%%%
 test.harris     = false;
 test.sift       = false;
-test.bootstrap  = true;
-test.contOp     = false;
+test.bootstrap  = false;
+test.contOp     = true;
 
 test.all        = false;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -70,7 +70,7 @@ end
 %% test Continous Operation
 if(test.contOp || test.all)
     fprintf('\n\n Test Continous Operation \n=====================\n');
-    fig_count = continousPoseEstimationTest( ...
+    [fig_count]  = continousPoseEstimationTest( ...
         datasets, hyperparameters, fig_count);
 end
 
