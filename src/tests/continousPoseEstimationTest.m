@@ -7,7 +7,7 @@ function [fig_count] = continousPoseEstimationTest(datasets, hyperparameters, fi
     %% Bootstrap the initial 3D-Point cloud
     T_wc_initial = [eye(3), zeros(3, 1)];
     poses(1,:) = reshape(T_wc_initial.',1,[]);  % Flatten the pose of the first keyframe
-    [R, T, P_3D, ~, matchedInlierPts_2] = bootstrap(datasets, hyperparameters);
+    [R, T, P_3D, matchedInlierPts_1, matchedInlierPts_2] = bootstrap(datasets, hyperparameters);
 
     % TODO: Modify the bootstrap function so that it also returns the
     %  not-matched keypoints in image 2, as they are candidates for new
