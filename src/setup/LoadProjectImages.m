@@ -1,7 +1,8 @@
-function [dataset] = LoadProjectImage(hyperparameters, filepaths)
+function [dataset] = LoadProjectImages(hyperparameters, filepaths)
 
 % filepaths
 ds          = filepaths.ds;
+dataset.ds  = ds;
 kitti_path  = filepaths.kitti_path;
 parking_path= filepaths.parking_path;
 malaga_path = filepaths.malaga_path;
@@ -14,12 +15,14 @@ bootstrap_frames    = hyperparameters.bootstrap_frames;
 if ds == 0
     % need to set kitti_path to folder containing "05" and "poses"
     assert(exist('kitti_path', 'var') ~= 0);
-    ground_truth = load([kitti_path '/poses/05.txt']);
-    ground_truth = ground_truth(:, [end-8 end]);
+    dataset.ground_truth = load([kitti_path '/poses/05.txt']);
+    dataset.ground_truth = dataset.ground_truth(:, [end-8 end]);
     last_frame = 4540;
     dataset.K = [7.188560000000e+02 0 6.071928000000e+02
         0 7.188560000000e+02 1.852157000000e+02
         0 0 1];
+    dataset.ground_truth = dataset.ground_truth(...
+        [bootstrap_frames(1), bootstrap_frames(2):length(dataset.ground_truth)], :); 
 elseif ds == 1
     % Path containing the many files of Malaga 7.
     assert(exist('malaga_path', 'var') ~= 0);
@@ -30,14 +33,18 @@ elseif ds == 1
     dataset.K = [621.18428 0 404.0076
         0 621.18428 309.05989
         0 0 1];
+    gps_data = load([malaga_path '/malaga-urban-dataset-extract-07_all-sensors_GPS.txt']);
+    dataset.ground_truth = gps_data(:, [9, 11]);
 elseif ds == 2
     % Path containing images, depths and all...
     assert(exist('parking_path', 'var') ~= 0);
     last_frame = 598;
     dataset.K = load([parking_path '/K.txt']);
 
-    ground_truth = load([parking_path '/poses.txt']);
-    ground_truth = ground_truth(:, [end-8 end]);
+    dataset.ground_truth = load([parking_path '/poses.txt']);
+    dataset.ground_truth = dataset.ground_truth(:, [end-8 end]);
+    dataset.ground_truth = dataset.ground_truth(...
+        [bootstrap_frames(1), bootstrap_frames(2):length(dataset.ground_truth)], :); 
 else
     assert(false);
 end
