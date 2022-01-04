@@ -1,4 +1,3 @@
-
 clear all       % lets start over :) 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % setup testing environment
@@ -6,13 +5,22 @@ clear all       % lets start over :)
 addpath('utils/recoverPoseFromFundMatrix/');% some utility functions (mostly long function names)
 addpath('utils/plotting/');                 % some utility functions (mostly plotting)
 addpath('utils/triangulation/');            % some utility functions (mostly triangulation)
+
 addpath('setup/');		            % project setup (hyperparams, loading images, ...)
+
 addpath('featureDetection/Harris/');        % Harris
 addpath('featureDetection/SIFT/');          % SIFT
+addpath('featureDetection/');               % general feature detection
+
 addpath('featureMatching/pairwiseFeatureDescriptorComparisson/');     % matching stuff (mostly for SIFT)
 addpath('featureMatching/KLT');             % matching stuff (mostly for SIFT)
+
+addpath('ransac/');
+
+addpath('continuousOperation/');
+
 addpath('bootstrapping/');                  % yeah bootstrap hurray
-addpath('continuousOperation');             % for the smoooooooth position tracking
+
 addpath('tests/');                          % super cool testing
 % Load stuff
 filepaths       = LoadFilePaths();          % get paths to datasets
@@ -20,13 +28,13 @@ hyperparameters = LoadHyperParams();        % change ALL params here (no param s
 datasets        = LoadProjectImages(hyperparameters, filepaths);  % get our images! 😎
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Note: this is a file to test functions! not to be used and loaded
-% anywhere else! Please do not change anything here ... Pauls workplace
-% only ;) 
+% anywhere else!
 %%%%%%%%%%%%%%%%%%%% change the following according to what you want to test %%%%%%%%%%%%
 test.harris     = false;
 test.sift       = false;
 test.bootstrap  = false;
-test.contOp     = true;
+test.contOp     = false;
+test.baseline   = true;
 
 test.all        = false;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -55,29 +63,9 @@ end
 %% test bootstrapping
 if(test.bootstrap || test.all)
     fprintf('\n\n Test Bootstraping \n=====================\n');
-    % with SIFT + Pairwise test:
-    hyperparameters.featDetec_algo = "SIFT";
-    hyperparameters.featDetec_matchType = "Pairwise";
-    [fig_count, matched_keypoints_1_sift, matched_keypoints_2_sift] = ... 
+    [fig_count, matched_keypoints_1, matched_keypoints_2, P_3D] = ... 
             bootstrapTest(datasets, hyperparameters, fig_count);
     
-    % with SIFT + KLT test:
-    hyperparameters.featDetec_algo = "SIFT";
-    hyperparameters.featDetec_matchType = "KLT";
-    [fig_count, matched_keypoints_1_sift, matched_keypoints_2_sift] = ... 
-            bootstrapTest(datasets, hyperparameters, fig_count);
-    
-    % with Harris + Pairwise test:
-    hyperparameters.featDetec_algo = "Harris";
-    hyperparameters.featDetec_matchType = "Pairwise";
-    [fig_count, matched_keypoints_1_harris, matched_keypoints_2_harris] = ... 
-            bootstrapTest(datasets, hyperparameters, fig_count);
-    
-    % with Harris + KLT test:
-    hyperparameters.featDetec_algo = "Harris";
-    hyperparameters.featDetec_matchType = "KLT";
-    [fig_count, matched_keypoints_1_harris, matched_keypoints_2_harris] = ... 
-            bootstrapTest(datasets, hyperparameters, fig_count);
 end
 
 %% test Continous Operation
@@ -87,6 +75,20 @@ if(test.contOp || test.all)
         datasets, hyperparameters, fig_count);
 end
 
+
+
+%% test Baseline Pipeline
+
+if test.baseline
+    fprintf('\n\n Test Baseline Pipeline \n=====================\n');
+    hyperparameters.featDetec_algo = "SIFT";
+    fig_count = baselineTest(datasets, hyperparameters, fig_count);
+end
+
+
 fprintf('\n=============================================================\n');
 fprintf('====================== Testing done ☑️ ======================');
 fprintf('\n=============================================================\n');
+
+
+
