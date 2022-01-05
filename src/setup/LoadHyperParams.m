@@ -28,6 +28,7 @@ hyperparameters.klt_NumPyramidLevels    = 3;            % Default is 3. Number o
 hyperparameters.klt_MaxBidirectionalError = inf;        % Default is inf. Error measured in piexels. Btw 0 and 3 recommended in matlab doc
 hyperparameters.klt_MaxIterations       = 30;           % Default is 30. Btw 10 and 50 recommended in matlab doc
 hyperparameters.klt_BlockSize           = [31, 31];     % Default is [31, 31]. Size of template's box to track. The higher the longer it takes
+hyperparameters.klt_withRounding        = true;         % Wether or not to round matched positions to integers or not
 %% hyperparameters pairwise matching
 hyperparameters.match_threshold			= 100;			% 100,
 hyperparameters.match_max_ratio			= 0.7;			% 0.7,

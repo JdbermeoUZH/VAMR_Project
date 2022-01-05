@@ -1,6 +1,7 @@
 function [matched_keypoints_1,matched_keypoints_2, isMatched] = getKLTMatches( ...
     img0, keypoints_1, img1, ...
-    NumPyramidLevels, MaxBidirectionalError, MaxIterations, BlockSize)
+    NumPyramidLevels, MaxBidirectionalError, MaxIterations, BlockSize, ...
+    withRounding)
 %GETKLTMATCHES Summary of this function goes here
 %   Detailed explanation goes here
 
@@ -16,8 +17,10 @@ initialize(KLT_tracker, keypoints_1, img0);
 [keypoints_2, isMatched] = KLT_tracker(img1);
 
 matched_keypoints_1 = keypoints_1(isMatched, :);
-%matched_keypoints_2 = round(keypoints_2(isMatched, :)); % It seems like IP is not solved with rounding :'( !!!!
-matched_keypoints_2 = keypoints_2(isMatched, :); 
-
+if (withRounding)
+    matched_keypoints_2 = round(keypoints_2(isMatched, :)); % It seems like IP is not solved with rounding :'( !!!!
+else
+    matched_keypoints_2 = keypoints_2(isMatched, :); 
+end
 end
 
