@@ -18,7 +18,7 @@ function [] = plotContinuousOp(ldmk_kps_3D, R_C2_W, T_C2_W, img, ...
 
     %% Visualize the 3-D landmarks and camera poses
     figure(fig_num),
-    subplot(2,3,[1, 2])
+    subplot(2,3,[1])
     % R,T should encode the pose of camera 2, such that M1 = [I|0] and M2=[R|t]
     
     % P is a [4xN] matrix containing the triangulated point cloud (in
@@ -45,14 +45,20 @@ function [] = plotContinuousOp(ldmk_kps_3D, R_C2_W, T_C2_W, img, ...
     title(sprintf('3D pose of camera and landamarks (@ frame: %.0f)', frame_num))
     
     %% Display image with landmark keypoints and candidate keypoints
-    subplot(2,3,[3])
+    subplot(2,3,[2, 3])
     imshow(img);
     hold on;
     plot(ldmk_kps_2D(1, :), ldmk_kps_2D(2, :), 'g', ...
-        'linestyle','none','marker','x', 'MarkerSize', 8);
+        'linestyle','none','marker','x', 'MarkerSize', 8, ...
+        'DisplayName','Landmark Keypoints');
     plot(candidate_kps_2D(1, :), candidate_kps_2D(2, :), 'r', ...
-        'linestyle','none','marker','x', 'MarkerSize', 4);
+        'linestyle','none','marker','x', 'MarkerSize', 4, ...
+        'DisplayName','Candidate Keypoints');
+    legend('Location', 'southoutside','NumColumns',2,'FontSize',5);
     hold off;
+    title(sprintf('Frame: %.0f', frame_num));
+    
+
     
     %% Display full trajectory in xz plane
     subplot(2,3,4)
