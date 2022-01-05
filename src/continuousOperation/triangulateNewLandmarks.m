@@ -70,7 +70,7 @@ if size(State.C)>0
     new_candidate_keypoints = new_candidate_keypoints(distance_p > hyperparameters.new_candidate_keypoints_dist_thre...
                                               & distance_c > hyperparameters.new_candidate_keypoints_dist_thre,:);
 else 
-    new_candidate_keypoints = new_keypoints_image(distance_p > hyperparameters.new_candidate_keypoints_dist_thre,:);
+    new_candidate_keypoints = new_candidate_keypoints(distance_p > hyperparameters.new_candidate_keypoints_dist_thre,:);
 end
 
 if size(new_candidate_keypoints,1) ~= 0
