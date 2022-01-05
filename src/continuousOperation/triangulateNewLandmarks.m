@@ -57,20 +57,20 @@ State.T(remove_filter,:)=[];
 new_candidate_keypoints = featDetect(Image_now, hyperparameters);
 
 % TODO: Move this line to deatDetect.m as we currently have a custom
-% implementation of Harris. 
+% implementation of Harris.
 %new_candidate_keypoints = detectHarrisFeatures(Image_now, ...
-%                                'MinQuality', hyperparameters.min_quality, ...
+%                                'MinQuality', hyperparameters.MinQuality, ...
 %                                'ROI', hyperparameters.ROI, ...
-%                                'FilterSize', hyperparameters.corner_patch_size);
+%                                'FilterSize', hyperparameters.FilterSize);
 
 distance_p = pdist2(State.P, new_candidate_keypoints, 'squaredeuclidean', 'Smallest', 1);
 if size(State.C)>0
     distance_c = pdist2(State.C, new_candidate_keypoints, 'squaredeuclidean', 'Smallest', 1);
     % Get the candidate keypoints that are far from current keypoints
-    new_candidate_keypoints = new_candidate_keypoints(distance_p > hyperparameters.new_candidate_keypoints_dist_thresh... 
-                                              & distance_c > hyperparameters.new_candidate_keypoints_dist_thresh,:);
+    new_candidate_keypoints = new_candidate_keypoints(distance_p > hyperparameters.new_candidate_keypoints_dist_thre...
+                                              & distance_c > hyperparameters.new_candidate_keypoints_dist_thre,:);
 else 
-    new_candidate_keypoints = new_candidate_keypoints(distance_p > hyperparameters.new_candidate_keypoints_dist_thresh,:);
+    new_candidate_keypoints = new_keypoints_image(distance_p > hyperparameters.new_candidate_keypoints_dist_thre,:);
 end
 
 if size(new_candidate_keypoints,1) ~= 0
