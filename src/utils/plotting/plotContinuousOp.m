@@ -71,7 +71,7 @@ function [] = plotContinuousOp(ldmk_kps_3D, R_C2_W, T_C2_W, img, ...
     hold off;
     xlabel('x');
     ylabel('z');
-    title(sprintf('Trajectory of last 20 frames and landmarks in 2D (@ frame: %.0f)', frame_num));
+    title(sprintf('Trajectory of last 20 frames and current landmarks in 2D (@ frame: %.0f)', frame_num));
 
     %% Display number of tracked landmarks over the last 20 features
     % Plot each point as a horizontal line 

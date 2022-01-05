@@ -1,4 +1,4 @@
-function [ aligned_X ] = umeyama( X, Y, plotResult )
+function [ aligned_X ] = umeyama( X, Y, estimateScale, plotResult )
 %UMEYAMA Corresponding point set registration with Umeyama method.
 %
 % [aligned_X] = umeyama(X, Y)   returns aligned trajectory after finding the 
@@ -42,10 +42,14 @@ end
 %% Bootstrap
 
 % Find the scale
-St=S.';
-traceProduct = D(:).'*St(:);
-sigma_x_sq = mean(X_demean(1,:).^2);
-scale = (1/(sigma_x_sq))*traceProduct;
+if (estimateScale)
+    St=S.';
+    traceProduct = D(:).'*St(:);
+    sigma_x_sq = mean(X_demean(1,:).^2);
+    scale = (1/(sigma_x_sq))*traceProduct;
+else
+    scale = 1;
+end
 
 R = scale * U*S*V';
 t = mean_Y - R*mean_X;

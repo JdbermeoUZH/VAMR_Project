@@ -5,12 +5,20 @@ function [fig_count] = reportTrajectoryError(poses, poses_ground_truth, dataset,
     
     %% Report ATE 
     % First we need to align the estimated and ground truth trajectories
-    if(dataset == 2 || dataset == 0) % Kitti or Parking datasets
+    if(dataset == 2) % Kitti or Parking datasets
         estimated_xyz = poses(:, [end-8 end-4 end]).';  %x, y, z coordinates of estimated pose
         ground_truth_xyz = poses_ground_truth(1:length(estimated_xyz), :);
-        ground_truth_xyz = [ground_truth_xyz, zeros(length(ground_truth_xyz), 1)].';
-        estimated_xyz_aligned = umeyama(estimated_xyz, ground_truth_xyz);
+        ground_truth_xyz = [ground_truth_xyz(:,1), zeros(length(ground_truth_xyz), 1), ground_truth_xyz(:,2)].';
+        estimate_scale = true;
+        estimated_xyz_aligned = umeyama(estimated_xyz, ground_truth_xyz, estimate_scale, false);
     
+    elseif(dataset == 0) % Kitti dataset 
+        estimated_xyz = poses(:, [end-8 end-4 end]).';  %x, y, z coordinates of estimated pose
+        ground_truth_xyz = poses_ground_truth(1:length(estimated_xyz), :);
+        ground_truth_xyz = [ground_truth_xyz(:,1), zeros(length(ground_truth_xyz), 1), ground_truth_xyz(:,2)].';
+        estimate_scale = false;
+        estimated_xyz_aligned = umeyama(estimated_xyz, ground_truth_xyz, estimate_scale, false);
+
     elseif(dataset == 1) % Malaga dataset 
         disp('Figure out criteria to choose poses to do the comparisson')
     end
@@ -55,7 +63,7 @@ function [fig_count] = reportTrajectoryError(poses, poses_ground_truth, dataset,
             end_frame = subtrajectory_cuts(j + 1);
             est_subtraj = estimated_xyz(:, start_frame : end_frame); 
             gt_subtraj = ground_truth_xyz(:, start_frame : end_frame);
-            aligned_subtraj = umeyama(est_subtraj, gt_subtraj);
+            aligned_subtraj = umeyama(est_subtraj, gt_subtraj, estimate_scale, false);
 
             subtrajectory_ates(j) = sqrt(mean(( ...
                 aligned_subtraj - gt_subtraj).^2, 'all'));
