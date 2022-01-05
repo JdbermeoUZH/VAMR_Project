@@ -116,16 +116,14 @@ dmeanlineangled = cross(meanline1,meanline2)/norm(cross(meanline1,meanline2));
 % of both initial keyframes
 
 meanposcam = Poscam/2;
-%
-meandist = norm(dot((Poscam/norm(Poscam)),meankp-meanposcam))/norm(meankp);
+meandist = norm(dot((Poscam/norm(Poscam)),meankp-meanposcam));
 %meandist = norm(dot(Poscam,meankp-meanposcam));
 
 
 % Calculate the minimum pure lateral distance needed with the rule of thumb
 % keyframe distance = average depth * threshold (10-20%)
 
-% minlat = meandist*.15;
-minlat = .15; % adimensional
+minlat = meandist*.15;
 
 % Calculate the minimum pure forward distance needed by asking that more
 % than, say, 15% of keypoints go out of view between keyframes, assuming
@@ -133,8 +131,7 @@ minlat = .15; % adimensional
 % 90°, this means that the forward motion should be of at least 15% of the
 % mean depth of the keypoints according to the second initial keyframe
 
-% minfwd = meandist*.15;
-minfwd = .15; %adimensional
+minfwd = meandist*.15;
 
 latdist = minlat;
 fordist = minfwd;
@@ -223,8 +220,7 @@ while framechange==1
 
 
     % estimated meanline of the ith next frame
-    norma = @(a) a./norm(a);
-    meanlinei =  norma(Cmeanlines^i*meanline2);
+    meanlinei =  Cmeanlines^i*meanline2;
 
     meanmeanline = (meanlinei+meanline2)/2;
 
@@ -233,17 +229,14 @@ while framechange==1
     % The distance metric used will be the distance between the keyframes in
     % the direction perpendicular to the mean of both frames' meanline
 
-%     sidestep = i*norm(cross(frameposchange,meanmeanline));
-    sidestep = i*norm(cross(frameposchange,meanmeanline))/norm(meankp);
-
+    sidestep = i*norm(cross(frameposchange,meanmeanline));
 
     %% Calculate the expected forward travel
 
     % The distance metric used will be the distance between the keyframes in
     % the direction parallel to the mean of both frames' meanline
 
-%     frontstep = i*norm(dot(frameposchange,meanmeanline));
-    frontstep = i*norm(dot(frameposchange,meanmeanline))/norm(meankp);
+    frontstep = i*norm(dot(frameposchange,meanmeanline));
 
     %% Compare these values to the exclusion diamond
 
@@ -287,8 +280,7 @@ while framechange==1
     cosaimdiff = dot(directions,repmat(aimlinei,[1,length(P_3D)]),1);
     aimdiff = acos(cosaimdiff);
 
-   % thetas = atan(aimdiff(1,:));
-   thetas = aimdiff;
+    thetas = atan(aimdiff(1,:));
 
     thetscore = sum(thetas>thetmin)/length(thetas);
 
@@ -304,7 +296,7 @@ while framechange==1
         ./vecnorm(kpthetasin);
     angtravel = acos(cosangtravel);
 
-    limangletravel = max(kpthetas)/3;%10/360*2*pi; %angle travel cutoff point
+    limangletravel = 10/360*2*pi; %angle travel cutoff point
 
     travelscore = sum(angtravel>limangletravel)/length(angtravel);
 
@@ -312,8 +304,8 @@ while framechange==1
 
     %should this check be failed, the loop stops and this function returns the
     %values of the previous loop
-    if thetscore>0.6 || travelscore>.2 % more than 60% out of frame or 
-                                          % more than 20% travel too far
+    if thetscore>0.2 || travelscore>.1 % more than 20% out of frame or 
+                                          % more than 10% travel too far
         framechange = -1;
     else
         nextkeyframe = i;

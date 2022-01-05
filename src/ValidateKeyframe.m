@@ -1,4 +1,4 @@
-function [i,frame,changeframe,imginf] = ValidateKeyframe(hyperparameters,i,frame,...
+function [changeframe,imginf] = ValidateKeyframe(hyperparameters,...
     img,tgfi,changeframe,KFKP,KFdes,minlat,minfwd,imginf,matchednumber,K,KFimg)
 
 
@@ -16,13 +16,14 @@ function [i,frame,changeframe,imginf] = ValidateKeyframe(hyperparameters,i,frame
 %it has information for, as well as a list of keypoints
 
 global i frame
-i = i+1;	%ith frame since the last KF (relative)
-frame = frame+1;	%tracks the current frame number (absolute)
+
 
 if i<tgfi && changeframe~=-1	%if next expected KF not yet reached and no warning
     changeframe = 1;	%we skip this frame
     imginf = struct;
     imgnum = 0;
+    i = i+changeframe;	%ith frame since the last KF (relative)
+    frame = frame+changeframe;	%tracks the current frame number (absolute)
     return;
 end
 
@@ -49,7 +50,8 @@ end
 %
 
 
-kpcell = struct("frame",frame,"KP",KP,"KFmatches",KFmatches,...
+kpcell = struct("frame",frame,"KP",KP,...
+    "des",des,"KFmatches",KFmatches,...
     "framematches",framematches, ...
     "frontstep",0,"sidestep",0,...
     "matchedInliers1",nan,...
@@ -57,7 +59,8 @@ kpcell = struct("frame",frame,"KP",KP,"KFmatches",KFmatches,...
     "FundamentalMatrix",nan,...
     "Rotation",nan,...
     "Translation",nan,...
-    "ptcloud",nan);
+    "ptcloud",nan, ...
+    "KF",0);
 if isempty(fieldnames(imginf))
     imginf = kpcell;
 else
@@ -65,11 +68,11 @@ else
 end
 
 
-%if not enough KP
-if length(framematches) < 0.8*matchednumber	%we prepare to run Val.Key on the previous frame
+%if not enough matched KP
+if length(framematches) < 20	%we prepare to run Val.Key on the previous frame
     changeframe = -1;	%this means anticipating that i and frame  will
-    i = i-2;		%be positively incremented
-    frame = frame-2;
+    i = i-1;		%be positively incremented
+    frame = frame-1;
     if i==1
         changeframe = 0;
     end
@@ -104,14 +107,10 @@ imginf(end).FundamentalMatrix = F;
 
 
 
-%if enough KP but next frame is no good
-if changeframe==-1
-    changeframe = 0;
-    return
-end
 
 
-% Get the relative rotaion and translatoin between camera frames. We assume K_1=K_2
+
+% Get the relative rotation and translation between camera frames. We assume K_1=K_2
 [R, T, P_3D] = recoverPoseFromFundamentalMatrix(...
     F, K, K, matchedInliers1, matchedInliers2);
 
@@ -147,9 +146,33 @@ meankp = sum(P_3D,2)/length(P_3D);
 
 meanmeanline = (meankp-T./2);
 
-sidestep = norm(cross(T,meanmeanline));
+% sidestep = norm(cross(T,meanmeanline));
+% 
+% frontstep = norm(dot(T,meanmeanline));
 
-frontstep = norm(dot(T,meanmeanline));
+sidestep = norm(cross(T,meanmeanline))/norm(P_3D,2);
+
+frontstep = norm(dot(T,meanmeanline))/norm(P_3D,2);
+
+
+
+% Plot for Debug
+% plotPoseEstimation(P_3D, R, T, matchedInliers1, matchedInliers2, KFimg, img, 1);
+%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%if enough KP but next frame is no good
+if changeframe==-1
+    changeframe = 0;
+    imginf(end).frontstep = frontstep;
+    imginf(end).sidestep = sidestep;
+    imginf(end).KF = 1;
+    
+
+    return
+end
 
 %if outside of exclusion diamond
 
@@ -157,19 +180,21 @@ frontstep = norm(dot(T,meanmeanline));
 varside = minlat*frontstep + minfwd*sidestep;
 coefside = minlat*minfwd;
 
-% Plot for Debug
-%plotPoseEstimation(P_3D, R, T, matchedInliers1, matchedInliers2, KFimg, img, 1);
-%
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 if varside < coefside %INSIDE EXCLUSION DIAMOND
-    changeframe = 1;
+    fwd0 = frontstep - sidestep*(-minlat/minfwd);
+    err = fwd0/minfwd;
+    bettermove = floor(tgfi/err);
+    changeframe = max(bettermove-tgfi,1);
+    imginf(end).frontstep = frontstep;
+    imginf(end).sidestep = sidestep;
+    i = i+changeframe;	%ith frame since the last KF (relative)
+    frame = frame+changeframe;	%tracks the current frame number (absolute)
     return;
 end
 
 imginf(end).frontstep = frontstep;
 imginf(end).sidestep = sidestep;
+imginf(end).KF = 1;
 
 changeframe = 0;
 
