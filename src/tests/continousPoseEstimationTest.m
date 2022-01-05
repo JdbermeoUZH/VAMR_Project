@@ -2,7 +2,7 @@ function [fig_count] = continousPoseEstimationTest(datasets, hyperparameters, fi
 %CONTINOUSPOSEESTIMATIONTEST Summary of this function goes here
 %   Detailed explanation goes here
     %% Initialize variables
-    poses = zeros(length(datasets.imgs) + 2, 12);
+    poses = zeros(length(datasets.imgs), 12);
 
     %% Bootstrap the initial 3D-Point cloud
     T_wc_initial = [eye(3), zeros(3, 1)];
@@ -52,12 +52,14 @@ function [fig_count] = continousPoseEstimationTest(datasets, hyperparameters, fi
 
         % Store values for reporting
         num_landmarks(i) = size(State_now.X, 1);
-        all_landmarks_3D_pos = union(all_landmarks_3D_pos, State_now.X); 
-
+        %all_landmarks_3D_pos = union(all_landmarks_3D_pos, State_now.X); 
+        all_landmarks_3D_pos = State_now.X;
+        
         % Plot result of pose estimation and matched features btw frames
         plotContinuousOp(State_now.X.', T_wc_now(:, 1:3), T_wc_now(:, 4), ...
-            img_now, State_now.P, State_now.C, fig_count, ...
-            num_landmarks, all_landmarks_3D_pos, hyperparameters.reporting_window);
+            img_now, State_now.P, State_now.C, fig_count, poses(3 : i + 2, :), ...
+            num_landmarks(1:i), all_landmarks_3D_pos, hyperparameters.reporting_window, ...
+            i + hyperparameters.bootstrap_frames(2));
 
         % Set values for next iteration
         img_old = img_now;

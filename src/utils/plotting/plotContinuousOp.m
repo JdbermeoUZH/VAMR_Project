@@ -1,6 +1,8 @@
 function [] = plotContinuousOp(ldmk_kps_3D, R_C2_W, T_C2_W, img, ...
     ldmk_kps_2D, candidate_kps_2D, fig_num, ...
-    num_landmarks, landmarks_postion, reporting_window)
+    estimated_trajectory, ...
+    num_landmarks, landmarks_postion, reporting_window, ...
+    frame_num)
     % TODO: Documentation
 
     %% Conver everything to homogenous coordinates
@@ -16,8 +18,7 @@ function [] = plotContinuousOp(ldmk_kps_3D, R_C2_W, T_C2_W, img, ...
 
     %% Visualize the 3-D landmarks and camera poses
     figure(fig_num),
-    subplot(1,2,1)
-    
+    subplot(2,3,[1, 2])
     % R,T should encode the pose of camera 2, such that M1 = [I|0] and M2=[R|t]
     
     % P is a [4xN] matrix containing the triangulated point cloud (in
@@ -41,9 +42,10 @@ function [] = plotContinuousOp(ldmk_kps_3D, R_C2_W, T_C2_W, img, ...
     rotate3d on;
     grid
     hold off
+    title(sprintf('3D pose of camera and landamarks (@ frame: %.0f)', frame_num))
     
     %% Display image with landmark keypoints and candidate keypoints
-    subplot(1,2,2)
+    subplot(2,3,[3])
     imshow(img);
     hold on;
     plot(ldmk_kps_2D(1, :), ldmk_kps_2D(2, :), 'g', ...
@@ -52,16 +54,30 @@ function [] = plotContinuousOp(ldmk_kps_3D, R_C2_W, T_C2_W, img, ...
         'linestyle','none','marker','x', 'MarkerSize', 4);
     hold off;
     
-    %% Display number of tracked landmarks over the last 20 features
-    % Plot each point as a horizontal line 
-    % plot(p_W_frames(3, :), -p_W_frames(1, :), 'rx', 'Linewidth', 3);
-
     %% Display full trajectory in xz plane
-    %plot(p_W_frames(3, :), -p_W_frames(1, :), 'rx', 'Linewidth', 3);
+    subplot(2,3,4)
+    num_frames = length(num_landmarks(num_landmarks~=0));
+    plot(estimated_trajectory(:, end-8), estimated_trajectory(:, end), '--', 'Linewidth', 1);
+    xlabel('x');
+    ylabel('z');
+    title(sprintf('Full Trajectory (@ frame: %.0f)', frame_num));
 
     %% Display trajectory of last 20 frames with landmarks in xz plane
-    %plot(p_W_landmarks(3, :), -p_W_landmarks(1, :), '.');
-    %hold on;
-    %plot(p_W_frames(3, :), -p_W_frames(1, :), 'rx', 'Linewidth', 3);
-    %hold off;
+    subplot(2,3,5)
+    plot(ldmk_kps_3D(1, :), ldmk_kps_3D(3, :), '.');
+    hold on;
+    window_frames_idx = max(num_frames - reporting_window + 1, 1) : num_frames;
+    plot(estimated_trajectory(window_frames_idx, end-8), estimated_trajectory(window_frames_idx, end), 'rx', 'Linewidth', 1);
+    hold off;
+    xlabel('x');
+    ylabel('z');
+    title(sprintf('Trajectory of last 20 frames and landmarks in 2D (@ frame: %.0f)', frame_num));
+
+    %% Display number of tracked landmarks over the last 20 features
+    % Plot each point as a horizontal line 
+    subplot(2,3,6)
+    frames = max(frame_num-reporting_window + 1, frame_num-num_frames + 1) : frame_num;    
+    plot(frames, num_landmarks(window_frames_idx));
+    title('# of landamarks over last 20 frames')
+    
 end
