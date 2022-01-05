@@ -2,7 +2,7 @@ function [hyperparameters] = LoadHyperParams()
 
 %% Run params
 hyperparameters.test					= true;         % Only run the test_range frames in 
-hyperparameters.test_range				= 50;           % Number of frames to run the test
+hyperparameters.test_range				= 100;           % Number of frames to run the test
 %% bootstraping
 hyperparameters.bootstrap_frames		= [1 3];
 %% hyperparams 8point
@@ -34,4 +34,9 @@ hyperparameters.match_max_ratio			= 0.7;			% 0.7,
 hyperparameters.match_unique			= true;			% true,
 %% hypeparameters continous operation
 hyperparameters.poseEstimationAlgo      = "8point";     % "8point" or "P3P"
+hyperparameters.new_candidate_keypoints_dist_thresh = 16; % (distance in pixels)^2 to consider a point as the same point
+hyperparameters.bearing_angle_threshold = 5*pi/180;     % Bearing angle at which we can consider safe adding a feature as a landmark
+%% hypeparameters reporting
+hyperparameters.reporting_window        = 20;           % Last n frames to use in some of the plots
+hyperparameters.subtrajectory_lengths   = [3, 7, 15, 23, 30, 50, 100]; % Subtrajectory lengths to use to for RTE
 end

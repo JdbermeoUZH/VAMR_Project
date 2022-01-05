@@ -1,4 +1,5 @@
-function [fig_count] = reportTrajectoryError(poses, poses_ground_truth, dataset, figure_grid_title, fig_count)
+function [fig_count] = reportTrajectoryError(poses, poses_ground_truth, dataset, ...
+    figure_grid_title, hyperparameters, fig_count)
 %REPORTTRAJECTORYERROR Summary of this function goes here
 %   Detailed explanation goes here
     
@@ -42,11 +43,10 @@ function [fig_count] = reportTrajectoryError(poses, poses_ground_truth, dataset,
 
     %% Report RTE 
     % Calcuate RTE: Calculate ATE for multiple cuts of the trajectories
-    subtrajectory_lengths = [3, 7, 15, 23]; %, 30, 50, 100];
-    rte = cell(length(subtrajectory_lengths), 2);
+    rte = cell(length(hyperparameters.subtrajectory_lengths), 2);
 
-    for i = 1:length(subtrajectory_lengths)
-        d_frames = subtrajectory_lengths(i);
+    for i = 1:length(hyperparameters.subtrajectory_lengths)
+        d_frames = hyperparameters.subtrajectory_lengths(i);
         subtrajectory_cuts = 1 : d_frames : length(estimated_xyz);
 
         subtrajectory_ates = zeros(length(subtrajectory_cuts), 1);

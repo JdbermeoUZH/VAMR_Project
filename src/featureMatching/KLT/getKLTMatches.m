@@ -19,7 +19,5 @@ matched_keypoints_1 = keypoints_1(isMatched, :);
 %matched_keypoints_2 = round(keypoints_2(isMatched, :)); % It seems like IP is not solved with rounding :'( !!!!
 matched_keypoints_2 = keypoints_2(isMatched, :); 
 
-release(KLT_tracker);
-
 end
 

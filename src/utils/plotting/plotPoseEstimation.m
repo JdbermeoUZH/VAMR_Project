@@ -34,6 +34,6 @@ subplot(1,2,2)
 % flip because showMatchedFeatures somwhow expects that
 matchedPoints_1 = [p1(1,:); p1(2,:)]';
 matchedPoints_2 = [p2(1,:); p2(2,:)]';
-showMatchedFeatures(img_1, img_2, matchedPoints_1, matchedPoints_2);
+%showMatchedFeatures(img_1, img_2, matchedPoints_1, matchedPoints_2);
 end
 
