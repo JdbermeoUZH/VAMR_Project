@@ -36,7 +36,7 @@ function [] = plotContinuousOp(ldmk_kps_3D, R_C2_W, T_C2_W, img, ...
     pose_cam1 = rigid3d(eye(3), zeros(1,3));
     pose_cam2 = rigid3d(inv(R_C2_W), T_C2_W');
     plotCamera('AbsolutePose',pose_cam1,'Opacity',0, 'Color', [1, 0, 0]);
-    plotCamera('AbsolutePose',pose_cam2,'Opacity',0, 'Color', [0, 0, 1]);
+    plotCamera('AbsolutePose',pose_cam2,'Opacity',0, 'Color', [0, 1, 0]);
     
     axis equal
     rotate3d on;
