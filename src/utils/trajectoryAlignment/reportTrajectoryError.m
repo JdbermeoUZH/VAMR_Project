@@ -6,32 +6,25 @@ function [fig_count] = reportTrajectoryError(poses, poses_ground_truth, dataset,
     %% Report ATE 
     estimated_xyz = poses(:, [end-8 end-4 end]).';  %x, y, z coordinates of estimated pose
     num_poses = size(estimated_xyz, 2);
-    % First we need to align the estimated and ground truth trajectories
-    if(dataset == 2) % Kitti or Parking datasets    
-        ground_truth_xyz = poses_ground_truth(1:num_poses, :);
-        ground_truth_xyz = [ground_truth_xyz(:,1), zeros(num_poses, 1), ground_truth_xyz(:,2)].';
-
-        estimate_scale = true;
-        estimated_xyz_aligned = umeyama(estimated_xyz, ground_truth_xyz, estimate_scale, false);
     
-    elseif(dataset == 0) % Kitti dataset 
+    % First we need to define what is the ground truth and which part of the
+    % estimated trajectory are we going to compare to
+    if(dataset == 2 || dataset == 0) % Kitti or Parking datasets    
         ground_truth_xyz = poses_ground_truth(1:num_poses, :);
         ground_truth_xyz = [ground_truth_xyz(:,1), zeros(num_poses, 1), ground_truth_xyz(:,2)].';
-        
-        estimate_scale = false;
-        estimated_xyz_aligned = umeyama(estimated_xyz, ground_truth_xyz, estimate_scale, false);
-
+   
     elseif(dataset == 1) % Malaga dataset 
         pose_to_comapre_idx = [1, 106-hyperparameters.bootstrap_frames(2): 106 : num_poses];
         estimated_xyz = estimated_xyz(:, pose_to_comapre_idx);
         num_poses = size(estimated_xyz, 2);
         ground_truth_xyz = poses_ground_truth(1:size(estimated_xyz, 2), :);
         ground_truth_xyz = [ground_truth_xyz(:,1), zeros(num_poses, 1), ground_truth_xyz(:,2)].';
-
-        estimate_scale = true;
-        estimated_xyz_aligned = umeyama(estimated_xyz, ground_truth_xyz, estimate_scale, false);
     end
 
+    % Align using Umemaya's algorithm
+    estimate_scale = true;
+    estimated_xyz_aligned = umeyama(estimated_xyz, ground_truth_xyz, estimate_scale, false);
+    
     % Calculate ATE
     ATE = sqrt(mean((estimated_xyz_aligned - ground_truth_xyz).^2, 'all'));
 

@@ -45,8 +45,16 @@ end
 if (estimateScale)
     St=S.';
     traceProduct = D(:).'*St(:);
-    sigma_x_sq = mean(X_demean(1,:).^2);
-    scale = (1/(sigma_x_sq))*traceProduct;
+    scale_x = 1/mean(X_demean(1,:).^2);    % 1/sigma_x
+    if scale_x >= 10 scale_x = 1/traceProduct; end
+    scale_y = 1/mean(X_demean(2,:).^2);    % 1/sigma_y
+    if scale_y >= 10 scale_y = 1/traceProduct; end
+    scale_z = 1/mean(X_demean(3,:).^2);    % 1/sigma_z
+    if scale_z >= 10 scale_z = 1/traceProduct; end
+
+    scale = traceProduct* [scale_x 0 0;
+                           0 scale_y 0;
+                           0 0 scale_z];   
 else
     scale = 1;
 end
