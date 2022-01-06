@@ -1,0 +1,16 @@
+function [matched_keypoints_query,matched_keypoints_database, matches] = getPairwiseMatches(...
+                keypoints_query, keypoints_database, ...  
+                descriptors_query, descriptors_database, hyperparameters)
+    % get matches using matlabs cool functions
+    matches = matchFeatures(descriptors_query, descriptors_database, ...
+                            'MatchThreshold',   hyperparameters.match_threshold, ... 
+                            'MaxRatio',         hyperparameters.match_max_ratio, ... 
+                            'Unique',           hyperparameters.match_unique);
+    % get keypoint locations of matched points
+    matched_keypoints_query     = keypoints_query(matches(:,1),:);
+    matched_keypoints_database  = keypoints_database(matches(:,2),:);
+
+    if (hyperparameters.match_withRounding)
+        matched_keypoints_database = round(matched_keypoints_database); % It seems like IP is not solved with rounding :'( !!!!
+    end
+end

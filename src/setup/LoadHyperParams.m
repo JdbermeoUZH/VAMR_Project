@@ -10,19 +10,15 @@ hyperparameters.eightPointNumTrials     = 30000;        % Default is 500, but ac
 hyperparameters.eightPointDistanceThreshold = 0.01;     % Default is 0.01
 hyperparameters.eightPointConfidence    = 99;           % Default is 99. The higher, the more iterations it requires
 %% hyperparams Feature detection
-hyperparameters.featDetec_algo          = "SIFT";       % "Harris" or "SIFT"
+hyperparameters.featDetec_algo          = "Harris";       % "Harris" or "SIFT"
 hyperparameters.featDetec_matchType     = "KLT";   % "KLT" or "Pairwise"
 %% hyperparameters SIFT
 hyperparameters.sift_num_scales 		= 4; 			% 3, 	Scales per octave (num octaves is calculated automatically).
 hyperparameters.sift_sigma 				= 1.6;			% 1,    1.6 is recommended in paper (TODO: search for link)
 hyperparameters.sift_contrast_threshold	= 0.02;			% 0.04, 0.02 gives more features (and still looks acceptable)
-%% hypeparameters Harris (TODO: make naming consistent e.g. start with "harris_")
-hyperparameters.corner_patch_size       = 9;            %9,
-hyperparameters.harris_kappa            = 0.12;         %0.08,  between 0.04 and 0.15 smaller seems better on parking lot. lesson 5 slide 47
-hyperparameters.num_keypoints           = 150;          %200,
-hyperparameters.nonmaximum_supression_radius = 10;      %8,     bigger ==> descriptors are further apart
-hyperparameters.descriptor_radius       = 9;            %9,
-hyperparameters.match_lambda            = 6;            %4,     Bigger lambda ==> less selective in matching descriptors
+%% hypeparameters Harris
+hyperparameters.harris_filer_size       = 5;            % 5,
+hyperparameters.harris_min_quality      = 0.01;         % 0.01,
 %% hypeparameters KLT
 hyperparameters.klt_NumPyramidLevels    = 3;            % Default is 3. Number of scales to use. Btw 1 and 4 recommended in matlab doc
 hyperparameters.klt_MaxBidirectionalError = inf;        % Default is inf. Error measured in piexels. Btw 0 and 3 recommended in matlab doc
@@ -33,6 +29,7 @@ hyperparameters.klt_withRounding        = false;         % Wether or not to roun
 hyperparameters.match_threshold			= 100;			% 100,
 hyperparameters.match_max_ratio			= 0.7;			% 0.7,
 hyperparameters.match_unique			= true;			% true,
+hyperparameters.match_withRounding      = false;        % Wether or not to round matched positions to integers or not
 %% hypeparameters continous operation
 hyperparameters.poseEstimationAlgo      = "8point";     % "8point" or "PnP"
 hyperparameters.new_candidate_keypoints_dist_thre = 16; % (distance in pixels)^2 to consider a point as the same point

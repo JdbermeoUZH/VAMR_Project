@@ -7,14 +7,11 @@ addpath('utils/plotting/');                 % some utility functions (mostly plo
 addpath('utils/triangulation/');            % some utility functions (mostly triangulation)
 addpath('utils/trajectoryAlignment/');      % some utility functions
 
-addpath('setup/');		            % project setup (hyperparams, loading images, ...)
+addpath('setup/');		                    % project setup (hyperparams, loading images, ...)
 
-addpath('featureDetection/Harris/');        % Harris
-addpath('featureDetection/SIFT/');          % SIFT
 addpath('featureDetection/');               % general feature detection
 
-addpath('featureMatching/pairwiseFeatureDescriptorComparisson/');     % matching stuff (mostly for SIFT)
-addpath('featureMatching/KLT');             % matching stuff (mostly for SIFT)
+addpath('featureMatching/');                % matching stuff
 
 addpath('ransac/');
 
