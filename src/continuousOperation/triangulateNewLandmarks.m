@@ -5,9 +5,10 @@ function State = triangulateNewLandmarks(Image_now, Image_before, State, T_wc_no
 if size(State.C)>0
     
     point_tracker = vision.PointTracker('MaxBidirectionalError', hyperparameters.klt_MaxBidirectionalError, ...
-                                        'NumPyramidLevels', hyperparameters.klt_NumPyramidLevels, ...
-                                        'BlockSize', hyperparameters.klt_BlockSize, ...
-                                        'MaxIterations', hyperparameters.klt_MaxIterations);
+                                       'NumPyramidLevels', hyperparameters.klt_NumPyramidLevels, ...
+                                       'BlockSize', hyperparameters.klt_BlockSize, ...
+                                       'MaxIterations', hyperparameters.klt_MaxIterations);
+
     initialize(point_tracker, State.C, Image_before); 
 
     
@@ -41,7 +42,7 @@ for i=1:size(State.C,1)
     alpha = acos(dot(bearing_vector_c', bearing_vector_f')/(norm(bearing_vector_c')*...
             norm(bearing_vector_f')));
     %Filter to get the alpha larger than threshold
-    if(alpha > hyperparameters.bearing_angle_thre)
+    if(alpha > hyperparameters.bearing_angle_threshold)
         remove_filter = [remove_filter,i];
         State.X = [State.X;new_landmark(1:3)'];
         State.P = [State.P;State.C(i,:)];   
@@ -53,28 +54,30 @@ State.F(remove_filter,:)=[];
 State.T(remove_filter,:)=[];
 
 %Get the new candidate keypoints in current frame
-new_candidate_keypoints = detectHarrisFeatures(Image_now, ...
-                                'MinQuality', hyperparameters.MinQuality, ...
-                                'ROI', hyperparameters.ROI, ...
-                                'FilterSize', hyperparameters.FilterSize);
-%Get the location in the image
-new_keypoints_image = new_candidate_keypoints.Location; % #of_new_keypoints * 2
+new_candidate_keypoints = featDetect(Image_now, hyperparameters);
 
-distance_p = pdist2(State.P, new_keypoints_image, 'squaredeuclidean', 'Smallest', 1);
+% TODO: Move this line to deatDetect.m as we currently have a custom
+% implementation of Harris.
+%new_candidate_keypoints = detectHarrisFeatures(Image_now, ...
+%                                'MinQuality', hyperparameters.MinQuality, ...
+%                                'ROI', hyperparameters.ROI, ...
+%                                'FilterSize', hyperparameters.FilterSize);
+
+distance_p = pdist2(State.P, new_candidate_keypoints, 'squaredeuclidean', 'Smallest', 1);
 if size(State.C)>0
-    distance_c = pdist2(State.C, new_keypoints_image, 'squaredeuclidean', 'Smallest', 1);
-    %Get the cancidate keypoints that are far from current keypoints
-    new_candidate_keypoints = new_keypoints_image(distance_p > hyperparameters.new_candidate_keypoints_dist_thre... 
+    distance_c = pdist2(State.C, new_candidate_keypoints, 'squaredeuclidean', 'Smallest', 1);
+    % Get the candidate keypoints that are far from current keypoints
+    new_candidate_keypoints = new_candidate_keypoints(distance_p > hyperparameters.new_candidate_keypoints_dist_thre...
                                               & distance_c > hyperparameters.new_candidate_keypoints_dist_thre,:);
 else 
-    new_candidate_keypoints = new_keypoints_image(distance_p > hyperparameters.new_candidate_keypoints_dist_thre,:);
+    new_candidate_keypoints = new_candidate_keypoints(distance_p > hyperparameters.new_candidate_keypoints_dist_thre,:);
 end
 
 if size(new_candidate_keypoints,1) ~= 0
     %update the State
     State.C = [State.C; new_candidate_keypoints];
     State.F = [State.F; new_candidate_keypoints];
-    vec_T_wc_now = reshape(T_wc_now,1,12);
+    vec_T_wc_now = reshape(T_wc_now, 1, 12);
     State.T = cat(1, State.T, repmat(vec_T_wc_now, size(new_candidate_keypoints, 1), 1));
 end
 

@@ -1,17 +1,35 @@
-function [fig_count] = reportTrajectoryError(poses, poses_ground_truth, dataset, figure_grid_title, fig_count)
+function [fig_count] = reportTrajectoryError(poses, poses_ground_truth, dataset, ...
+    figure_grid_title, hyperparameters, fig_count)
 %REPORTTRAJECTORYERROR Summary of this function goes here
 %   Detailed explanation goes here
     
     %% Report ATE 
+    estimated_xyz = poses(:, [end-8 end-4 end]).';  %x, y, z coordinates of estimated pose
+    num_poses = size(estimated_xyz, 2);
     % First we need to align the estimated and ground truth trajectories
-    if(dataset == 2 || dataset == 0) % Kitti or Parking datasets
-        estimated_xyz = poses(:, [end-8 end-4 end]).';  %x, y, z coordinates of estimated pose
-        ground_truth_xyz = poses_ground_truth(1:length(estimated_xyz), :);
-        ground_truth_xyz = [ground_truth_xyz, zeros(length(ground_truth_xyz), 1)].';
-        estimated_xyz_aligned = umeyama(estimated_xyz, ground_truth_xyz);
+    if(dataset == 2) % Kitti or Parking datasets    
+        ground_truth_xyz = poses_ground_truth(1:num_poses, :);
+        ground_truth_xyz = [ground_truth_xyz(:,1), zeros(num_poses, 1), ground_truth_xyz(:,2)].';
+
+        estimate_scale = true;
+        estimated_xyz_aligned = umeyama(estimated_xyz, ground_truth_xyz, estimate_scale, false);
     
+    elseif(dataset == 0) % Kitti dataset 
+        ground_truth_xyz = poses_ground_truth(1:num_poses, :);
+        ground_truth_xyz = [ground_truth_xyz(:,1), zeros(num_poses, 1), ground_truth_xyz(:,2)].';
+        
+        estimate_scale = false;
+        estimated_xyz_aligned = umeyama(estimated_xyz, ground_truth_xyz, estimate_scale, false);
+
     elseif(dataset == 1) % Malaga dataset 
-        disp('Figure out criteria to choose poses to do the comparisson')
+        pose_to_comapre_idx = [1, 106-hyperparameters.bootstrap_frames(2): 106 : num_poses];
+        estimated_xyz = estimated_xyz(:, pose_to_comapre_idx);
+        num_poses = size(estimated_xyz, 2);
+        ground_truth_xyz = poses_ground_truth(1:size(estimated_xyz, 2), :);
+        ground_truth_xyz = [ground_truth_xyz(:,1), zeros(num_poses, 1), ground_truth_xyz(:,2)].';
+
+        estimate_scale = true;
+        estimated_xyz_aligned = umeyama(estimated_xyz, ground_truth_xyz, estimate_scale, false);
     end
 
     % Calculate ATE
@@ -42,11 +60,10 @@ function [fig_count] = reportTrajectoryError(poses, poses_ground_truth, dataset,
 
     %% Report RTE 
     % Calcuate RTE: Calculate ATE for multiple cuts of the trajectories
-    subtrajectory_lengths = [3, 7, 15, 23]; %, 30, 50, 100];
-    rte = cell(length(subtrajectory_lengths), 2);
+    rte = cell(length(hyperparameters.subtrajectory_lengths), 2);
 
-    for i = 1:length(subtrajectory_lengths)
-        d_frames = subtrajectory_lengths(i);
+    for i = 1:length(hyperparameters.subtrajectory_lengths)
+        d_frames = hyperparameters.subtrajectory_lengths(i);
         subtrajectory_cuts = 1 : d_frames : length(estimated_xyz);
 
         subtrajectory_ates = zeros(length(subtrajectory_cuts), 1);
@@ -55,7 +72,7 @@ function [fig_count] = reportTrajectoryError(poses, poses_ground_truth, dataset,
             end_frame = subtrajectory_cuts(j + 1);
             est_subtraj = estimated_xyz(:, start_frame : end_frame); 
             gt_subtraj = ground_truth_xyz(:, start_frame : end_frame);
-            aligned_subtraj = umeyama(est_subtraj, gt_subtraj);
+            aligned_subtraj = umeyama(est_subtraj, gt_subtraj, estimate_scale, false);
 
             subtrajectory_ates(j) = sqrt(mean(( ...
                 aligned_subtraj - gt_subtraj).^2, 'all'));

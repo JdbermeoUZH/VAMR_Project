@@ -28,6 +28,7 @@ function [R, T, P_3D, matchedInliers1, matchedInliers2] = bootstrap(datasets, hy
     MaxBidirectionalError       = hyperparameters.klt_MaxBidirectionalError;        
     MaxIterations               = hyperparameters.klt_MaxIterations;           
     BlockSize                   = hyperparameters.klt_BlockSize; 
+    withRounding                = hyperparameters.klt_withRounding;
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Lets Go %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -49,7 +50,7 @@ function [R, T, P_3D, matchedInliers1, matchedInliers2] = bootstrap(datasets, hy
         [matched_keypoints_1, matched_keypoints_2, ~] = ...
             getKLTMatches(img0, keypoints_1, img1, ...
                           NumPyramidLevels, MaxBidirectionalError, ...
-                          MaxIterations, BlockSize);
+                          MaxIterations, BlockSize, withRounding);
     else
         % output error
         error('The given feature detection method is not valid');
