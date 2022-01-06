@@ -11,7 +11,7 @@ hyperparameters.eightPointDistanceThreshold = 0.01;     % Default is 0.01
 hyperparameters.eightPointConfidence    = 99;           % Default is 99. The higher, the more iterations it requires
 %% hyperparams Feature detection
 hyperparameters.featDetec_algo          = "Harris";       % "Harris" or "SIFT"
-hyperparameters.featDetec_matchType     = "Pairwise";   % "KLT" or "Pairwise"
+hyperparameters.featDetec_matchType     = "KLT";   % "KLT" or "Pairwise"
 %% hyperparameters SIFT
 hyperparameters.sift_num_scales 		= 4; 			% 3, 	Scales per octave (num octaves is calculated automatically).
 hyperparameters.sift_sigma 				= 1.6;			% 1,    1.6 is recommended in paper (TODO: search for link)
@@ -29,7 +29,7 @@ hyperparameters.klt_withRounding        = false;         % Wether or not to roun
 hyperparameters.match_threshold			= 100;			% 100,
 hyperparameters.match_max_ratio			= 0.7;			% 0.7,
 hyperparameters.match_unique			= true;			% true,
-hyperparameters.match_withRounding      = false;         % Wether or not to round matched positions to integers or not
+hyperparameters.match_withRounding      = false;        % Wether or not to round matched positions to integers or not
 %% hypeparameters continous operation
 hyperparameters.poseEstimationAlgo      = "8point";     % "8point" or "PnP"
 hyperparameters.new_candidate_keypoints_dist_thre = 16; % (distance in pixels)^2 to consider a point as the same point
