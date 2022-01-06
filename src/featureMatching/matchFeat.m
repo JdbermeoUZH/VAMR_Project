@@ -10,8 +10,8 @@ function [matchedPts1, matchedPts2, validity] = matchFeat(img0, kpts0, img1, hyp
         [matchedPts1, matchedPts2, matches] = getPairwiseMatches(...
             kpts1, kpts0, desc1, desc0, ...
             hyperparameters);
-        % bring matches in same form as validity in KLT
-        validity = matches(:,2);
+            
+        validity = ones(size(matchedPts1,1),1); % hacky way to make all the points valid :D
 
     elseif (hyperparameters.featDetec_matchType == "KLT")
         NumPyramidLevels            = hyperparameters.klt_NumPyramidLevels;           
