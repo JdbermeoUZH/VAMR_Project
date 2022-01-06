@@ -2,7 +2,7 @@ function [hyperparameters] = LoadHyperParams()
 
 %% Run params
 hyperparameters.test					= true;         % Only run the test_range frames in 
-hyperparameters.test_range				= 50;           % Number of frames to run the test
+hyperparameters.test_range				= 220;           % Number of frames to run the test
 %% bootstraping
 hyperparameters.bootstrap_frames		= [1 3];
 %% hyperparams 8point
@@ -28,13 +28,13 @@ hyperparameters.klt_NumPyramidLevels    = 3;            % Default is 3. Number o
 hyperparameters.klt_MaxBidirectionalError = inf;        % Default is inf. Error measured in piexels. Btw 0 and 3 recommended in matlab doc
 hyperparameters.klt_MaxIterations       = 30;           % Default is 30. Btw 10 and 50 recommended in matlab doc
 hyperparameters.klt_BlockSize           = [31, 31];     % Default is [31, 31]. Size of template's box to track. The higher the longer it takes
-hyperparameters.klt_withRounding        = true;         % Wether or not to round matched positions to integers or not
+hyperparameters.klt_withRounding        = false;         % Wether or not to round matched positions to integers or not
 %% hyperparameters pairwise matching
 hyperparameters.match_threshold			= 100;			% 100,
 hyperparameters.match_max_ratio			= 0.7;			% 0.7,
 hyperparameters.match_unique			= true;			% true,
 %% hypeparameters continous operation
-hyperparameters.poseEstimationAlgo      = "8point";     % "8point" or "P3P"
+hyperparameters.poseEstimationAlgo      = "8point";     % "8point" or "PnP"
 hyperparameters.new_candidate_keypoints_dist_thre = 16; % (distance in pixels)^2 to consider a point as the same point
 hyperparameters.bearing_angle_threshold = 5*pi/180;     % Bearing angle at which we can consider safe adding a feature as a landmark
 %% hypeparameters reporting

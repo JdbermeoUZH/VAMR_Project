@@ -1,15 +1,15 @@
 function [dataset] = LoadProjectImages(hyperparameters, filepaths)
 
 % filepaths
-ds          = filepaths.ds;
-dataset.ds  = ds;
-kitti_path  = filepaths.kitti_path;
-parking_path= filepaths.parking_path;
-malaga_path = filepaths.malaga_path;
+ds                 = filepaths.ds;
+dataset.ds         = ds;
+kitti_path         = filepaths.kitti_path;
+parking_path       = filepaths.parking_path;
+malaga_path        = filepaths.malaga_path;
 % hyperparams
-test        = hyperparameters.test;
-test_range  = hyperparameters.test_range;
-bootstrap_frames    = hyperparameters.bootstrap_frames;
+test               = hyperparameters.test;
+test_range         = hyperparameters.test_range;
+bootstrap_frames   = hyperparameters.bootstrap_frames;
 
 
 if ds == 0
@@ -85,7 +85,7 @@ dataset.imgs    = cell(1,2);
 j = 1;
 %
 for i = range
-    fprintf('\n\nProcessing frame %d\n=====================\n', i);
+    fprintf('\n\nLoading frame %d\n=====================\n', i);
     if ds == 0
         image = imread([kitti_path '/05/image_0/' sprintf('%06d.png',i)]);
     elseif ds == 1

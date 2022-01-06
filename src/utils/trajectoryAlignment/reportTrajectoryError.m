@@ -4,23 +4,32 @@ function [fig_count] = reportTrajectoryError(poses, poses_ground_truth, dataset,
 %   Detailed explanation goes here
     
     %% Report ATE 
+    estimated_xyz = poses(:, [end-8 end-4 end]).';  %x, y, z coordinates of estimated pose
+    num_poses = size(estimated_xyz, 2);
     % First we need to align the estimated and ground truth trajectories
-    if(dataset == 2) % Kitti or Parking datasets
-        estimated_xyz = poses(:, [end-8 end-4 end]).';  %x, y, z coordinates of estimated pose
-        ground_truth_xyz = poses_ground_truth(1:length(estimated_xyz), :);
-        ground_truth_xyz = [ground_truth_xyz(:,1), zeros(length(ground_truth_xyz), 1), ground_truth_xyz(:,2)].';
+    if(dataset == 2) % Kitti or Parking datasets    
+        ground_truth_xyz = poses_ground_truth(1:num_poses, :);
+        ground_truth_xyz = [ground_truth_xyz(:,1), zeros(num_poses, 1), ground_truth_xyz(:,2)].';
+
         estimate_scale = true;
         estimated_xyz_aligned = umeyama(estimated_xyz, ground_truth_xyz, estimate_scale, false);
     
     elseif(dataset == 0) % Kitti dataset 
-        estimated_xyz = poses(:, [end-8 end-4 end]).';  %x, y, z coordinates of estimated pose
-        ground_truth_xyz = poses_ground_truth(1:length(estimated_xyz), :);
-        ground_truth_xyz = [ground_truth_xyz(:,1), zeros(length(ground_truth_xyz), 1), ground_truth_xyz(:,2)].';
+        ground_truth_xyz = poses_ground_truth(1:num_poses, :);
+        ground_truth_xyz = [ground_truth_xyz(:,1), zeros(num_poses, 1), ground_truth_xyz(:,2)].';
+        
         estimate_scale = false;
         estimated_xyz_aligned = umeyama(estimated_xyz, ground_truth_xyz, estimate_scale, false);
 
     elseif(dataset == 1) % Malaga dataset 
-        disp('Figure out criteria to choose poses to do the comparisson')
+        pose_to_comapre_idx = [1, 106-hyperparameters.bootstrap_frames(2): 106 : num_poses];
+        estimated_xyz = estimated_xyz(:, pose_to_comapre_idx);
+        num_poses = size(estimated_xyz, 2);
+        ground_truth_xyz = poses_ground_truth(1:size(estimated_xyz, 2), :);
+        ground_truth_xyz = [ground_truth_xyz(:,1), zeros(num_poses, 1), ground_truth_xyz(:,2)].';
+
+        estimate_scale = true;
+        estimated_xyz_aligned = umeyama(estimated_xyz, ground_truth_xyz, estimate_scale, false);
     end
 
     % Calculate ATE

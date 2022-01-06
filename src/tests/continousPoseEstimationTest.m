@@ -3,6 +3,7 @@ function [fig_count] = continousPoseEstimationTest(datasets, hyperparameters, fi
 %   Detailed explanation goes here
     %% Initialize variables
     poses = zeros(length(datasets.imgs), 12);
+    hyperparameters.CameraParams = cameraParameters('IntrinsicMatrix', datasets.K);
 
     %% Bootstrap the initial 3D-Point cloud
     T_wc_initial = [eye(3), zeros(3, 1)];
@@ -35,7 +36,6 @@ function [fig_count] = continousPoseEstimationTest(datasets, hyperparameters, fi
 
     num_landmarks = zeros(length(datasets.imgs) + 1);
     num_landmarks(1) = size(State_before.X, 1);
-    all_landmarks_3D_pos = State_before.X;
 
     %% Continious estimation of points with frames after last keyframe
     for i = 1:length(datasets.imgs)
@@ -43,7 +43,7 @@ function [fig_count] = continousPoseEstimationTest(datasets, hyperparameters, fi
         img_now = datasets.imgs{i};
 
         % Get the current state
-        [State_now, T_wc_now, ~] = processFrame( ...
+        [State_now, T_wc_now] = processFrame( ...
             img_now, img_old, State_before, T_wc_before, ...
             datasets.K, hyperparameters);
             
@@ -52,13 +52,11 @@ function [fig_count] = continousPoseEstimationTest(datasets, hyperparameters, fi
 
         % Store values for reporting
         num_landmarks(i) = size(State_now.X, 1);
-        %all_landmarks_3D_pos = union(all_landmarks_3D_pos, State_now.X); 
-        all_landmarks_3D_pos = State_now.X;
         
         % Plot result of pose estimation and matched features btw frames
         plotContinuousOp(State_now.X.', T_wc_now(:, 1:3), T_wc_now(:, 4), ...
             img_now, State_now.P, State_now.C, fig_count, poses(3 : i + 2, :), ...
-            num_landmarks(1:i), all_landmarks_3D_pos, hyperparameters.reporting_window, ...
+            num_landmarks(1:i), State_now.X, hyperparameters.reporting_window, ...
             i + hyperparameters.bootstrap_frames(2));
 
         % Set values for next iteration

@@ -1,4 +1,4 @@
-function [State_now, T_wc_now, State_before] = estimateCurrentPose( ...
+function [State_now, T_wc_now] = estimateCurrentPose( ...
     Image_now, Image_before, State_before, T_wc_before, ...
     K, hyperparameters)
 % Implementation of 4.1 and 4.2
@@ -43,15 +43,30 @@ if (hyperparameters.poseEstimationAlgo == "8point")
     T_wc_now = T_wc_before*invt(T_nb); %T_w_c1 * T_c1_c2 --> 3*4
     
     %Set the state
-    State_before.P = inliers_before(:,1:2); %-->N*2
     State_now.P = inliers_now(:,1:2);       %-->N*2
     State_now.X = landmarks_now;
     State_now.F = State_before.F;
     State_now.C = State_before.C;
     State_now.T = State_before.T;
 
-elseif (hyperparameters.poseEstimationAlgo == "P3P")
-    disp('Do P3PRansac')
+elseif (hyperparameters.poseEstimationAlgo == "PnP")
+    disp('Do PnPRansac')
+    [R, T, inliersIndex] = estimateWorldCameraPose(keypoints_now, landmarks_now, hyperparameters.CameraParams, 'Confidence', 0.99, 'MaxNumTrials', 1000, 'MaxReprojectionError', 1);
+   
+    %Filter inliers
+    inliers_now = keypoints_now(inliersIndex,:);
+    landmarks_now = landmarks_now(inliersIndex,:);
+    
+    %Get the pose of camera 2 w.r.t world
+    T_nb = [R,T.';zeros(1,3),1];   %T_c2_c1
+    T_wc_now = T_wc_before*invt(T_nb); %T_w_c1 * T_c1_c2 --> 3*4
+    
+    %Set the state
+    State_now.P = inliers_now(:,1:2);
+    State_now.X = landmarks_now;
+    State_now.F = State_before.F;
+    State_now.C = State_before.C;
+    State_now.T = State_before.T;
 end
 
 end
