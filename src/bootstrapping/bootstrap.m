@@ -20,16 +20,7 @@ function [R, T, P_3D, matchedInliers1, matchedInliers2] = bootstrap(datasets, hy
     img1    = datasets.img1;
     K       = datasets.K;
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    % could also just use hyperparameters.the_thing_to_use in every function 
-    featDetec_matchType         = hyperparameters.featDetec_matchType;
     
-    % KLT Matching Stuff
-    NumPyramidLevels            = hyperparameters.klt_NumPyramidLevels;           
-    MaxBidirectionalError       = hyperparameters.klt_MaxBidirectionalError;        
-    MaxIterations               = hyperparameters.klt_MaxIterations;           
-    BlockSize                   = hyperparameters.klt_BlockSize; 
-    withRounding                = hyperparameters.klt_withRounding;
-
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Lets Go %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -37,27 +28,11 @@ function [R, T, P_3D, matchedInliers1, matchedInliers2] = bootstrap(datasets, hy
     % Find the keypoint correspondences between the two images
     % --> extract keypoints and features (descriptors)
     % img0
-    [keypoints_1, descriptors_1] = featDetect(img0, hyperparameters);
-    if (featDetec_matchType == "Pairwise")
-        % img1
-        [keypoints_2, descriptors_2] = featDetect(img1, hyperparameters);
-        % Create vectors with positions of pixels matched in both frames
-        [matched_keypoints_1, matched_keypoints_2] = getMatchedPoints(...
-            keypoints_2, keypoints_1, descriptors_2, descriptors_1, ...
-            hyperparameters);
-
-    elseif (featDetec_matchType == "KLT")
-        [matched_keypoints_1, matched_keypoints_2, ~] = ...
-            getKLTMatches(img0, keypoints_1, img1, ...
-                          NumPyramidLevels, MaxBidirectionalError, ...
-                          MaxIterations, BlockSize, withRounding);
-    else
-        % output error
-        error('The given feature detection method is not valid');
-    end
+    [kpts0, desc0] = featDetect(img0, hyperparameters);
+    [matched_keypoints_0, matched_keypoints_1, validity] = matchFeat(img0, kpts0, img1, hyperparameters, desc0);
 
     % Estimate the pose change with ransac
-    output = getFundamentalMatrix(matched_keypoints_1, matched_keypoints_2, hyperparameters);
+    output = getFundamentalMatrix(matched_keypoints_0, matched_keypoints_1, hyperparameters);
     F               = output.F;
     matchedInliers1 = output.inlierPts1;
     matchedInliers2 = output.inlierPts2;
