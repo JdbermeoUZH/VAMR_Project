@@ -23,7 +23,7 @@ function [] = plotContinuousOp(ldmk_kps_3D, R_C2_W, T_C2_W, img, ...
     
     % P is a [4xN] matrix containing the triangulated point cloud (in
     % homogeneous coordinates), given by the function linearTriangulation
-    plot3(ldmk_kps_3D_h(1,:), ldmk_kps_3D_h(2,:), ldmk_kps_3D_h(3,:), 'o');
+    plot3(ldmk_kps_3D_h(1,:), ldmk_kps_3D_h(2,:), ldmk_kps_3D_h(3,:), '.');
     hold on;
     % Display camera pose
     
@@ -35,10 +35,11 @@ function [] = plotContinuousOp(ldmk_kps_3D, R_C2_W, T_C2_W, img, ...
     %text(center_cam2_W(1)-0.1, center_cam2_W(2)-0.1, center_cam2_W(3)-0.1,'Cam 2','fontsize',10,'color','k','FontWeight','bold');
     pose_cam1 = rigid3d(eye(3), zeros(1,3));
     pose_cam2 = rigid3d(inv(R_C2_W), T_C2_W');
-    plotCamera('AbsolutePose',pose_cam1,'Opacity',0, 'Color', [1, 0, 0]);
-    plotCamera('AbsolutePose',pose_cam2,'Opacity',0, 'Color', [0, 1, 0]);
+    plotCamera('AbsolutePose',pose_cam1,'Opacity',0, 'Color', [0, 1, 0]);
+    plotCamera('AbsolutePose',pose_cam2,'Opacity',0, 'Color', [1, 0, 0]);
     
     axis equal
+    axis([T_C2_W(1)-30, T_C2_W(1)+30, T_C2_W(2)-30, T_C2_W(2)+30, T_C2_W(3)-30, T_C2_W(3)+30])
     rotate3d on;
     grid
     hold off
