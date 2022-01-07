@@ -11,8 +11,5 @@ function [output] = getFundamentalMatrix(matchedPts1, matchedPts2, hyperparamete
     % extract inliers
     output.inlierPts1 = matchedPts1(output.inliers,:);
     output.inlierPts2 = matchedPts2(output.inliers,:);
-    % now use 8 point algo
-   % output.F = estimateFundamentalMatrix(output.inlierPts1,output.inlierPts2,'Method','Norm8Point');
-    
 end
     
