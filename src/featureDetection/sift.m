@@ -1,4 +1,4 @@
-function [kpts, desc] = sift(image, num_scales, sigma, contrast_threshold)
+function [kpts, desc] = sift(image, num_scales, sigma, contrast_threshold, max_num_kpts)
 	% @brief: 	given an image return the SIFT keypoints and the coresponding features (descriptors)
 	% 
 	% @param(image)					: grayscale image
@@ -17,6 +17,7 @@ function [kpts, desc] = sift(image, num_scales, sigma, contrast_threshold)
 	% https://ch.mathworks.com/help/vision/ref/detectsiftfeatures.html?searchHighlight=sift&s_tid=srchtitle_sift_3
 
 	kp 				= detectSIFTFeatures(image, Sigma=sigma, NumLayersInOctave=num_scales, ContrastThreshold=contrast_threshold);
+	kp 				= selectStrongest(kp, max_num_kpts);
 	[desc, kpts] 	= extractFeatures(image, kp.Location);
 	kpts			= round(kpts);
 end

@@ -1,4 +1,4 @@
-function [kpts, desc] = harris(image, min_quality, filter_size)
+function [kpts, desc] = harris(image, min_quality, filter_size, max_num_kpts)
 	% @brief: 	given an image return the Harris keypoints and the coresponding features (descriptors)
 	% 
 	% @param(image)					: grayscale image
@@ -10,6 +10,7 @@ function [kpts, desc] = harris(image, min_quality, filter_size)
 	% 
 
 	kp 				= detectHarrisFeatures(image, 'MinQuality', min_quality, 'FilterSize', filter_size);
+	kp 				= selectStrongest(kp, max_num_kpts);
 	[desc, kpts] 	= extractFeatures(image, kp.Location);
 	kpts			= round(kpts);
 end
