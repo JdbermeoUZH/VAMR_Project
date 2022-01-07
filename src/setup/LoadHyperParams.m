@@ -6,12 +6,13 @@ hyperparameters.test_range				= 220;           % Number of frames to run the tes
 %% bootstraping
 hyperparameters.bootstrap_frames		= [1 3];
 %% hyperparams 8point
-hyperparameters.eightPointNumTrials     = 500;        % Default is 500, but acutal NumTrials changes with chose confidence
+hyperparameters.eightPointNumTrials     = 500;          % Default is 500, but acutal NumTrials changes with chose confidence
 hyperparameters.eightPointDistanceThreshold = 0.01;     % Default is 0.01
 hyperparameters.eightPointConfidence    = 99;           % Default is 99. The higher, the more iterations it requires
 %% hyperparams Feature detection
 hyperparameters.featDetec_algo          = "FAST";       % "Harris" or "SIFT" or "FAST"
 hyperparameters.featDetec_matchType     = "KLT";        % "KLT" or "Pairwise"
+hyperparameters.featDetec_max_num_kpts  = 1000;
 %% hyperparameters SIFT
 hyperparameters.sift_num_scales 		= 4; 			% 3, 	Scales per octave (num octaves is calculated automatically).
 hyperparameters.sift_sigma 				= 1.6;			% 1,    1.6 is recommended in paper (TODO: search for link)
@@ -23,8 +24,8 @@ hyperparameters.harris_min_quality      = 0.01;         % 0.01,
 hyperparameters.fast_min_quality        = 0.1;          % 0.1,
 hyperparameters.fast_min_contrast       = 0.2;          % 0.2,
 %% hypeparameters KLT
-hyperparameters.klt_NumPyramidLevels    = 3;            % Default is 3. Number of scales to use. Btw 1 and 4 recommended in matlab doc
-hyperparameters.klt_MaxBidirectionalError = inf;        % Default is inf. Error measured in piexels. Btw 0 and 3 recommended in matlab doc
+hyperparameters.klt_NumPyramidLevels    = 4;            % Default is 3. Number of scales to use. Btw 1 and 4 recommended in matlab doc
+hyperparameters.klt_MaxBidirectionalError = 3;        % Default is inf. Error measured in piexels. Btw 0 and 3 recommended in matlab doc
 hyperparameters.klt_MaxIterations       = 30;           % Default is 30. Btw 10 and 50 recommended in matlab doc
 hyperparameters.klt_BlockSize           = [31, 31];     % Default is [31, 31]. Size of template's box to track. The higher the longer it takes
 hyperparameters.klt_withRounding        = true;         % Wether or not to round matched positions to integers or not
