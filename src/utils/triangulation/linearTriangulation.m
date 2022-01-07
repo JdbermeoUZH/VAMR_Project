@@ -36,6 +36,10 @@ for j=1:NumPoints
     P(:,j) = v(:,4);
 end
 
+%Eliminate entries that would cause a decimal overflow
+[x,y] = find(abs(P)<10^-7);
+P(:,y)=[];
+
 P = P./repmat(P(4,:),4,1); % Dehomogeneize (P is expressed in homogeneous coordinates)
 
 return
