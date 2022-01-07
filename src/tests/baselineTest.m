@@ -340,6 +340,110 @@ zlabel('z')
 
 % sure = vecnorm(absp3d)
 
+
+%% Intermediary Points
+
+% 
+KFidx = find([allimginf(:).KF] == 1); %keyframe indices
+knwnf = allimginf(:).frame; %all frames we have records of
+
+for idx = hyperparameters.bootstrap_frames(end)+1:size(datasets.imgs)+hyperparameters.bootstrap_frames(end)
+
+    if sum(knwnf == idx) == 0 %if first encounter with this frame
+
+        %Find best keypoint info to match with
+        [~,relkfidx] = min(abs(KFidx-ones(1,length(KFidx))*idx));%index of closest KF in KF list
+        relkf = KFidx(relkfidx); %closest KF
+        siderelkf = sign(relkf-idx); %whether the kf is before or after the frame
+        srelkf = KFidx(relkfidx-siderelkf);
+        keypoints_1 = allimginf(relkf).KP;
+        descriptors_1 = allimginf(relkf).des;
+        if relkf>KFidx(2)
+            relkfimg = datasets(idx-hyperparameters.bootstrap_frames(end)).imgs;
+        else
+            relkfimg = datasets.img1;
+        end
+
+%         %Extract inlier KP and des to hopefully lighten calculatory load
+%         keypoints_1 = [allimginf(relkf).matchedInliers2;...
+%             allimginf(srelkf).matchedInliers2];
+%         
+%         allrelkfdes = allimginf(relkf).des;
+%         [~, pos] = ismember(allimginf(relkf).matchedInliers2,allimginf(relkf).KP,"rows");
+        
+        
+%         relkfindes = allrelkfdes(find(allimginf(relkf).KP == allimginf(relkf).matchedInliers2));
+%         allsrelkfdes = datasets(srelkf).des;
+%         srelkfindes = allsrelkfdes(find(allimginf(srelkf).KP == allimginf(srelkf).matchedInliers2));       
+
+
+%         descriptors1 = [relkfindes;srelkfindes];
+
+        fimgidx = idx-hyperparameters.bootstrap_frames(end);
+        fimg = datasets.imgs{fimgidx};
+
+        if (featDetec_matchType == "Pairwise")
+            % img1
+            [keypoints_2, descriptors_2] = featDetect(fimg, hyperparameters);
+            % Create vectors with positions of pixels matched in both frames
+            [matched_keypoints_1, matched_keypoints_2] = getMatchedPoints(...
+                keypoints_2, keypoints_1, descriptors_2, descriptors_1, ...
+                hyperparameters);
+
+        elseif (featDetec_matchType == "KLT")
+            [matched_keypoints_1, matched_keypoints_2, ~] = ...
+                getKLTMatches(relkfimg, keypoints_1, img1, ...
+                NumPyramidLevels, MaxBidirectionalError, ...
+                MaxIterations, BlockSize);
+            keypoints_2 = nan;
+            descriptors_1 = nan;
+            descriptors_2 = nan;
+        else
+            % output error
+            error('The given feature detection method is not valid');
+        end
+
+        % Estimate the pose change with ransac
+        output = getFundamentalMatrix(matched_keypoints_1, matched_keypoints_2, hyperparameters);
+        F               = output.F;
+        matchedInliers1 = output.inlierPts1;
+        matchedInliers2 = output.inlierPts2;
+
+        % Get the relative rotaion and translatoin between camera frames. We assume K_1=K_2
+        [R, T, P_3D] = recoverPoseFromFundamentalMatrix(...
+            F, K, K, matchedInliers1, matchedInliers2);
+
+        
+
+
+
+
+    end
+
+
+    if sum(KFidx == idx) == 0 %if not a KF
+
+
+
+    end
+
+
+end
+%
+%
+%
+
+
+
+
+
+
+
+
+
+
+
+
 toc
 
 
