@@ -40,4 +40,24 @@ function [R, T, P_3D, matchedInliers1, matchedInliers2] = bootstrap(datasets, hy
     % Get the relative rotaion and translatoin between camera frames. We assume K_1=K_2
     [R, T, P_3D] = recoverPoseFromFundamentalMatrix(...
         F, K, K, matchedInliers1, matchedInliers2);
+    
+    %% Bundle Adjustment for the intial 3D point cloud
+    pointTrackArray = [];
+    for i = 1:size(matchedInliers1, 1)
+        pointTrackArray = [pointTrackArray, pointTrack([1,2], [matchedInliers1(i,:); matchedInliers2(i,:)])];
+    end
+
+    % Get estimated absolut pose wrt to world view
+    T_relative = [R , T ; zeros(1,3),1];
+    T_W= [eye(3) , [0;0;0] ; zeros(1,3),1] * invt(T_relative);
+
+    vSet = viewSet;
+    vSet = addView(vSet,1,'Orientation',eye(3),'Location',[0,0,0], 'Points', matchedInliers1);
+    vSet = addView(vSet,2,'Orientation',T_W(1:3, 1:3),'Location', T_W(1:3, 4).', 'Points', matchedInliers2);
+    cameraPoses = poses(vSet);
+
+    [RefinedP_3D, refinedPoses] = bundleAdjustment( ...
+        P_3D.', pointTrackArray,cameraPoses,hyperparameters.CameraIntrinsics, ...
+        'FixedViewIDs', [1], 'Verbose', false, 'AbsoluteTolerance', 0.001); 
+
 end

@@ -4,7 +4,11 @@ function [fig_count] = continousPoseEstimationTest(datasets, hyperparameters, fi
     %% Initialize variables
     poses = zeros(length(datasets.imgs), 12);
     hyperparameters.CameraParams = cameraParameters('IntrinsicMatrix', datasets.K);
-
+    principalPoint = [datasets.K(1,3), datasets.K(2,3)];
+    focalLength   = [datasets.K(1,1), datasets.K(2,2)];
+    imageSize      = size(datasets.img0);
+    hyperparameters.CameraIntrinsics = cameraIntrinsics(focalLength,principalPoint,imageSize); 
+    
     %% Bootstrap the initial 3D-Point cloud
     T_wc_initial = [eye(3), zeros(3, 1)];
     poses(1,:) = reshape(T_wc_initial.',1,[]);  % Flatten the pose of the first keyframe
