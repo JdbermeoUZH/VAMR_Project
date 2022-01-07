@@ -1,5 +1,6 @@
 function [changeframe,imginf] = ValidateKeyframe(hyperparameters,...
-    img,tgfi,changeframe,KFKP,KFdes,minlat,minfwd,imginf,matchednumber,K,KFimg)
+        img,tgfi,changeframe,KFKP,KFdes,minlat,minfwd,imginf,K,KFimg)
+%     img,tgfi,changeframe,KFKP,KFdes,minlat,minfwd,imginf,matchednumber,K,KFimg)
 
 
 %changeframe: 1, -1, or 0. States whether the previous iteration of Val.Key.
@@ -21,7 +22,7 @@ global i frame
 if i<tgfi && changeframe~=-1	%if next expected KF not yet reached and no warning
     changeframe = 1;	%we skip this frame
     imginf = struct;
-    imgnum = 0;
+%     imgnum = 0; %%%%%%%%%%%%%
     i = i+changeframe;	%ith frame since the last KF (relative)
     frame = frame+changeframe;	%tracks the current frame number (absolute)
     return;
@@ -39,10 +40,24 @@ if (featDetec_matchType == "Pairwise")
         hyperparameters);
 
 elseif (featDetec_matchType == "KLT")
+
+    % KLT Matching Stuff
+    NumPyramidLevels            = hyperparameters.klt_NumPyramidLevels;
+    MaxBidirectionalError       = hyperparameters.klt_MaxBidirectionalError;
+    MaxIterations               = hyperparameters.klt_MaxIterations;
+    BlockSize                   = hyperparameters.klt_BlockSize;
+    KP = nan;
+    des = nan;
+%     KFdes = nan; %%%%%%%
+
+    [KFKP, ~] = featDetect(KFimg, hyperparameters);   %%%%%%%%%KFdes
+
     [KFmatches, framematches, ~] = ...
         getKLTMatches(KFimg, KFKP, img, ...
         NumPyramidLevels, MaxBidirectionalError, ...
         MaxIterations, BlockSize);
+
+
 else
     % output error
     error('The given feature detection method is not valid');
@@ -69,7 +84,7 @@ end
 
 
 %if not enough matched KP
-if length(framematches) < 20	%we prepare to run Val.Key on the previous frame
+if length(framematches) < 30	%we prepare to run Val.Key on the previous frame
     changeframe = -1;	%this means anticipating that i and frame  will
     i = i-1;		%be positively incremented
     frame = frame-1;
@@ -114,6 +129,23 @@ imginf(end).FundamentalMatrix = F;
 [R, T, P_3D] = recoverPoseFromFundamentalMatrix(...
     F, K, K, matchedInliers1, matchedInliers2);
 
+%Sanity check, some of our KP sometimes go behind the cameras and screw up
+%the average
+[~,y] = find(P_3D(3,:)<=0);
+P_3D(:,y) = [];
+
+%some others are at crazy distances that don't seem normal. Just reject
+%keypoints whose scale of distance is too different from the rest
+kpnorm = vecnorm(P_3D);
+mkpnorm = median(kpnorm);
+[~,y] = find(kpnorm<0.01*mkpnorm);
+P_3D(:,y) = [];
+
+[~,y] = find(kpnorm>mkpnorm*100);
+P_3D(:,y) = [];
+
+
+
 imginf(end).Rotation = R;
 imginf(end).Translation = T;
 imginf(end).ptcloud = P_3D;
@@ -149,6 +181,7 @@ meanmeanline = (meankp-T./2);
 % sidestep = norm(cross(T,meanmeanline));
 % 
 % frontstep = norm(dot(T,meanmeanline));
+
 
 sidestep = norm(cross(T,meanmeanline))/norm(P_3D,2);
 

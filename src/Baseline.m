@@ -115,9 +115,9 @@ dmeanlineangled = cross(meanline1,meanline2)/norm(cross(meanline1,meanline2));
 % calculate the mean Perpendicular distance to a keypoint from the mean of the positions
 % of both initial keyframes
 
-meanposcam = Poscam/2;
+% meanposcam = Poscam/2;%%%%%%%%%%%%%%%%%
 %
-meandist = norm(dot((Poscam/norm(Poscam)),meankp-meanposcam))/norm(meankp);
+% meandist = norm(dot((Poscam/norm(Poscam)),meankp-meanposcam))/norm(meankp);%%%%%%%%%%%%%%
 %meandist = norm(dot(Poscam,meankp-meanposcam));
 
 
@@ -125,7 +125,7 @@ meandist = norm(dot((Poscam/norm(Poscam)),meankp-meanposcam))/norm(meankp);
 % keyframe distance = average depth * threshold (10-20%)
 
 % minlat = meandist*.15;
-minlat = .15; % adimensional
+minlat = .1; % adimensional
 
 % Calculate the minimum pure forward distance needed by asking that more
 % than, say, 15% of keypoints go out of view between keyframes, assuming
@@ -134,7 +134,7 @@ minlat = .15; % adimensional
 % mean depth of the keypoints according to the second initial keyframe
 
 % minfwd = meandist*.15;
-minfwd = .15; %adimensional
+minfwd = .2; %adimensional
 
 latdist = minlat;
 fordist = minfwd;
@@ -175,7 +175,7 @@ kpthetas = acos(kpthetacos); % assumption that the camera angle < pi
 kpthetasin = cross(P_3D,repmat([0;0;1],1,length(P_3D)),1)...
     ./vecnorm(P_3D);
 thetmin = min(thetu,thetv);
-thetmin2 = max(kpthetas);
+% thetmin2 = max(kpthetas); %%%%%%%%%%%%%%%
 
 % % 3) Check that this angle is greater than the angles formed by most of the
 % % KP after frame change (60%) in abs val
@@ -312,8 +312,8 @@ while framechange==1
 
     %should this check be failed, the loop stops and this function returns the
     %values of the previous loop
-    if thetscore>0.6 || travelscore>.2 % more than 60% out of frame or 
-                                          % more than 20% travel too far
+    if thetscore>0.3 || travelscore>.4 % more than 30% out of frame or 
+                                          % more than 40% travel too far
         framechange = -1;
     else
         nextkeyframe = i;

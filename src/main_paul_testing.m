@@ -1,4 +1,11 @@
 clear all       % lets start over :) 
+
+%Scripts Tom Fucked with: main (duh), baselineTest, Baseline,
+%ValidateKeyframe, matsplit, linearTriangulation, should with
+%disambiguateRelativePose as well
+
+%and you need to remove contOp from the path because it destroys my soul
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % setup testing environment
 % add necesary paths (please do NOT remove this)
@@ -35,6 +42,7 @@ test.sift       = false;
 test.bootstrap  = false;
 test.contOp     = false;
 test.baseline   = true;
+test.baselineperf= false;
 
 test.all        = false;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -82,9 +90,19 @@ end
 if test.baseline
     fprintf('\n\n Test Baseline Pipeline \n=====================\n');
     hyperparameters.featDetec_algo = "SIFT";
-    fig_count = baselineTest(datasets, hyperparameters, fig_count);
+    [fig_count,allimginf,numtgfis] = baselineTest(datasets, hyperparameters, fig_count);
 end
 
+if test.baselineperf
+    profile on
+    [fig_count,allimginf,numtgfis] = baselineTest(datasets, hyperparameters, fig_count);
+    figure(fig_count)
+    profile viewer
+    profile off
+end
+
+
+%%
 
 fprintf('\n=============================================================\n');
 fprintf('====================== Testing done ☑️ ======================');
