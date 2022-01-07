@@ -30,15 +30,8 @@ if (hyperparameters.poseEstimationAlgo == "8point")
     inliers_now = keypoints_now(inliersIndex,:);
     landmarks_now = landmarks_now(inliersIndex,:);
     
-    %Transform to homogeneous coordinates --> N*3
-    inliers_before = [inliers_before, ones(length(inliers_before), 1)];
-    inliers_now = [inliers_now, ones(length(inliers_now), 1)]; 
-    
     %Get the relative pose
-    E = K'* F * K;
-    [R,u3] = decomposeEssentialMatrix(E);
-    [R,T] = disambiguateRelativePose( ...
-        R, u3, inliers_before.', inliers_now.', K, K);
+    [R, T, ~] = recoverPoseFromFundamentalMatrix(F, K, K, inliers_before, inliers_now);
     
     %Get the pose of camera 2 w.r.t world
     T_nb = [R,T;zeros(1,3),1];   %T_c2_c1
