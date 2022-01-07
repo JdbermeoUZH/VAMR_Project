@@ -5,6 +5,7 @@ function [] = plotContinuousOp(ldmk_kps_3D, R_C2_W, T_C2_W, img, ...
     frame_num)
     % TODO: Documentation
 
+    axis_range = 50;
     %% Conver everything to homogenous coordinates
     ldmk_kps_3D_h = vertcat(ldmk_kps_3D, ones(1, length(ldmk_kps_3D)));
 
@@ -39,7 +40,8 @@ function [] = plotContinuousOp(ldmk_kps_3D, R_C2_W, T_C2_W, img, ...
     plotCamera('AbsolutePose',pose_cam2,'Opacity',0, 'Color', [1, 0, 0]);
     
     axis equal
-    axis([T_C2_W(1)-30, T_C2_W(1)+30, T_C2_W(2)-30, T_C2_W(2)+30, T_C2_W(3)-30, T_C2_W(3)+30])
+    % center plot on current position
+    axis([T_C2_W(1)-axis_range, T_C2_W(1)+axis_range, T_C2_W(2)-axis_range, T_C2_W(2)+axis_range, T_C2_W(3)-axis_range, T_C2_W(3)+axis_range])
     rotate3d on;
     grid
     hold off
@@ -67,6 +69,8 @@ function [] = plotContinuousOp(ldmk_kps_3D, R_C2_W, T_C2_W, img, ...
     plot(estimated_trajectory(:, end-8), estimated_trajectory(:, end), '--', 'Linewidth', 1);
     xlabel('x');
     ylabel('z');
+    axis equal
+    axis([T_C2_W(1)-axis_range, T_C2_W(1)+axis_range, T_C2_W(3)-axis_range, T_C2_W(3)+axis_range])
     title(sprintf('Full Trajectory (@ frame: %.0f)', frame_num));
 
     %% Display trajectory of last 20 frames with landmarks in xz plane
@@ -78,6 +82,8 @@ function [] = plotContinuousOp(ldmk_kps_3D, R_C2_W, T_C2_W, img, ...
     hold off;
     xlabel('x');
     ylabel('z');
+    axis equal
+    axis([T_C2_W(1)-axis_range, T_C2_W(1)+axis_range, T_C2_W(3)-axis_range, T_C2_W(3)+axis_range])
     title(sprintf('Trajectory of last 20 frames and current landmarks in 2D (@ frame: %.0f)', frame_num));
 
     %% Display number of tracked landmarks over the last 20 features
