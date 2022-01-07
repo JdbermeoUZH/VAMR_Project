@@ -70,7 +70,7 @@ function [] = plotContinuousOp(ldmk_kps_3D, R_C2_W, T_C2_W, img, ...
     xlabel('x');
     ylabel('z');
     axis equal
-    axis([T_C2_W(1)-axis_range, T_C2_W(1)+axis_range, T_C2_W(3)-axis_range, T_C2_W(3)+axis_range])
+    %axis([T_C2_W(1)-axis_range, T_C2_W(1)+axis_range, T_C2_W(3)-axis_range, T_C2_W(3)+axis_range])
     title(sprintf('Full Trajectory (@ frame: %.0f)', frame_num));
 
     %% Display trajectory of last 20 frames with landmarks in xz plane
