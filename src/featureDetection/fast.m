@@ -1,5 +1,5 @@
-function [kpts, desc] = harris(image, min_quality, filter_size)
-	% @brief: 	given an image return the Harris keypoints and the coresponding features (descriptors)
+function [kpts, desc] = fast(image, min_quality, min_contrast)
+	% @brief: 	given an image return the FAST keypoints and the coresponding features (descriptors)
 	% 
 	% @param(image)					: grayscale image
 	%
@@ -9,7 +9,6 @@ function [kpts, desc] = harris(image, min_quality, filter_size)
 	%								  https://ch.mathworks.com/help/vision/ref/extractfeatures.html
 	% 
 
-	kp 				= detectHarrisFeatures(image, 'MinQuality', min_quality, 'FilterSize', filter_size);
+	kp 				= detectFASTFeatures(image, 'MinQuality', min_quality, 'MinContrast', min_contrast);
 	[desc, kpts] 	= extractFeatures(image, kp.Location);
 	kpts			= round(kpts);
-end
