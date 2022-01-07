@@ -25,6 +25,6 @@ function [matchedPts1, matchedPts2, validity] = matchFeat(img0, kpts0, img1, hyp
                           MaxIterations, BlockSize, withRounding);
     else
         % output error
-        error('The given feature detection method is not valid');
+        error('The given feature matching method is not valid');
     end
 end

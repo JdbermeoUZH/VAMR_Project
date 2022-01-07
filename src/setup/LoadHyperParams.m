@@ -10,7 +10,7 @@ hyperparameters.eightPointNumTrials     = 30000;        % Default is 500, but ac
 hyperparameters.eightPointDistanceThreshold = 0.01;     % Default is 0.01
 hyperparameters.eightPointConfidence    = 99;           % Default is 99. The higher, the more iterations it requires
 %% hyperparams Feature detection
-hyperparameters.featDetec_algo          = "Harris";       % "Harris" or "SIFT"
+hyperparameters.featDetec_algo          = "FAST";       % "Harris" or "SIFT" or "FAST"
 hyperparameters.featDetec_matchType     = "KLT";   % "KLT" or "Pairwise"
 %% hyperparameters SIFT
 hyperparameters.sift_num_scales 		= 4; 			% 3, 	Scales per octave (num octaves is calculated automatically).
@@ -19,6 +19,9 @@ hyperparameters.sift_contrast_threshold	= 0.02;			% 0.04, 0.02 gives more featur
 %% hypeparameters Harris
 hyperparameters.harris_filer_size       = 5;            % 5,
 hyperparameters.harris_min_quality      = 0.01;         % 0.01,
+%% hypeparameters FAST
+hyperparameters.fast_min_quality        = 0.1;          % 0.1,
+hyperparameters.fast_min_contrast       = 0.2;          % 0.2,
 %% hypeparameters KLT
 hyperparameters.klt_NumPyramidLevels    = 3;            % Default is 3. Number of scales to use. Btw 1 and 4 recommended in matlab doc
 hyperparameters.klt_MaxBidirectionalError = inf;        % Default is inf. Error measured in piexels. Btw 0 and 3 recommended in matlab doc
