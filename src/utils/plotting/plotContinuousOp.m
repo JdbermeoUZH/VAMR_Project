@@ -5,6 +5,7 @@ function [] = plotContinuousOp(ldmk_kps_3D, R_C2_W, T_C2_W, img, ...
     frame_num)
     % TODO: Documentation
 
+    axis_range = 50;
     %% Conver everything to homogenous coordinates
     ldmk_kps_3D_h = vertcat(ldmk_kps_3D, ones(1, length(ldmk_kps_3D)));
 
@@ -23,7 +24,7 @@ function [] = plotContinuousOp(ldmk_kps_3D, R_C2_W, T_C2_W, img, ...
     
     % P is a [4xN] matrix containing the triangulated point cloud (in
     % homogeneous coordinates), given by the function linearTriangulation
-    plot3(ldmk_kps_3D_h(1,:), ldmk_kps_3D_h(2,:), ldmk_kps_3D_h(3,:), 'o');
+    plot3(ldmk_kps_3D_h(1,:), ldmk_kps_3D_h(2,:), ldmk_kps_3D_h(3,:), '.');
     hold on;
     % Display camera pose
     
@@ -35,10 +36,12 @@ function [] = plotContinuousOp(ldmk_kps_3D, R_C2_W, T_C2_W, img, ...
     %text(center_cam2_W(1)-0.1, center_cam2_W(2)-0.1, center_cam2_W(3)-0.1,'Cam 2','fontsize',10,'color','k','FontWeight','bold');
     pose_cam1 = rigid3d(eye(3), zeros(1,3));
     pose_cam2 = rigid3d(inv(R_C2_W), T_C2_W');
-    plotCamera('AbsolutePose',pose_cam1,'Opacity',0, 'Color', [1, 0, 0]);
-    plotCamera('AbsolutePose',pose_cam2,'Opacity',0, 'Color', [0, 1, 0]);
+    plotCamera('AbsolutePose',pose_cam1,'Opacity',0, 'Color', [0, 1, 0]);
+    plotCamera('AbsolutePose',pose_cam2,'Opacity',0, 'Color', [1, 0, 0]);
     
     axis equal
+    % center plot on current position
+    axis([T_C2_W(1)-axis_range, T_C2_W(1)+axis_range, T_C2_W(2)-axis_range, T_C2_W(2)+axis_range, T_C2_W(3)-axis_range, T_C2_W(3)+axis_range])
     rotate3d on;
     grid
     hold off
@@ -66,6 +69,8 @@ function [] = plotContinuousOp(ldmk_kps_3D, R_C2_W, T_C2_W, img, ...
     plot(estimated_trajectory(:, end-8), estimated_trajectory(:, end), '--', 'Linewidth', 1);
     xlabel('x');
     ylabel('z');
+    axis equal
+    axis([T_C2_W(1)-axis_range, T_C2_W(1)+axis_range, T_C2_W(3)-axis_range, T_C2_W(3)+axis_range])
     title(sprintf('Full Trajectory (@ frame: %.0f)', frame_num));
 
     %% Display trajectory of last 20 frames with landmarks in xz plane
@@ -77,6 +82,8 @@ function [] = plotContinuousOp(ldmk_kps_3D, R_C2_W, T_C2_W, img, ...
     hold off;
     xlabel('x');
     ylabel('z');
+    axis equal
+    axis([T_C2_W(1)-axis_range, T_C2_W(1)+axis_range, T_C2_W(3)-axis_range, T_C2_W(3)+axis_range])
     title(sprintf('Trajectory of last 20 frames and current landmarks in 2D (@ frame: %.0f)', frame_num));
 
     %% Display number of tracked landmarks over the last 20 features

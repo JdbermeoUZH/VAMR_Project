@@ -43,17 +43,12 @@ end
 
 if (hyperparameters.poseEstimationAlgo == "8point" || PnPfailed)
     %8 points algorithms with RANSAC
-    [F, inliersIndex] = estimateFundamentalMatrix(... 
-        keypoints_before, keypoints_now, ...
-        'Method','RANSAC',...
-        'NumTrials', hyperparameters.eightPointNumTrials, ...
-        'DistanceThreshold', hyperparameters.eightPointDistanceThreshold,...
-        'Confidence', hyperparameters.eightPointConfidence);
-    
-    %Filter inliers
-    inliers_before = keypoints_before(inliersIndex,:);
-    inliers_now = keypoints_now(inliersIndex,:);
-    landmarks_now = landmarks_now(inliersIndex,:);
+    output = getFundamentalMatrix(keypoints_before, keypoints_now, hyperparameters);
+    F               = output.F;
+    inliersIndex    = output.inliers;
+    inliers_before  = output.inlierPts1;
+    inliers_now     = output.inlierPts2;
+    landmarks_now   = landmarks_now(inliersIndex,:);
     
     %Get the relative pose
     [R, T, ~] = recoverPoseFromFundamentalMatrix(F, K, K, inliers_before, inliers_now);
