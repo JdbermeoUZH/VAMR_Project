@@ -23,7 +23,7 @@ hyperparameters.harris_filer_size       = 5;            % 5,
 hyperparameters.harris_min_quality      = 0.01;         % 0.01,
 %% hypeparameters FAST
 hyperparameters.fast_min_quality        = 0.1;          % 0.1,
-hyperparameters.fast_min_contrast       = 0.2;          % 0.2,
+hyperparameters.fast_min_contrast       = 0.1;          % 0.2,
 %% hypeparameters KLT
 hyperparameters.klt_NumPyramidLevels    = 3;            % Default is 3. Number of scales to use. Btw 1 and 4 recommended in matlab doc
 hyperparameters.klt_MaxBidirectionalError = 3;        % Default is inf. Error measured in piexels. Btw 0 and 3 recommended in matlab doc
@@ -41,5 +41,5 @@ hyperparameters.new_candidate_keypoints_dist_thre = 16; % (distance in pixels)^2
 hyperparameters.bearing_angle_threshold = 5*pi/180;     % Bearing angle at which we can consider safe adding a feature as a landmark
 %% hypeparameters reporting
 hyperparameters.reporting_window        = 20;           % Last n frames to use in some of the plots
-hyperparameters.subtrajectory_lengths   = [3, 7, 15, 23, 30, 50, 100]; % Subtrajectory lengths to use to for RTE
+hyperparameters.subtrajectory_lengths   = [3, 5, 7, 10, 20]; % Subtrajectory lengths to use to for RTE
 end

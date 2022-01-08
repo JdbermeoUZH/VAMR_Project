@@ -15,7 +15,7 @@ function [fig_count, fig] = reportTrajectoryError(poses, poses_ground_truth, dat
         ground_truth_xyz = [ground_truth_xyz(:,1), zeros(num_poses, 1), ground_truth_xyz(:,2)].';
    
     elseif(dataset == 1) % Malaga dataset 
-        pose_to_comapre_idx = [1, 106-hyperparameters.bootstrap_frames(2): 106 : num_poses];
+        pose_to_comapre_idx = [20-hyperparameters.bootstrap_frames(1): 20 : num_poses];
         estimated_xyz = estimated_xyz(:, pose_to_comapre_idx);
         num_poses = size(estimated_xyz, 2);
         ground_truth_xyz = poses_ground_truth(1:size(estimated_xyz, 2), :);
@@ -26,13 +26,13 @@ function [fig_count, fig] = reportTrajectoryError(poses, poses_ground_truth, dat
     if(dataset == 0) % Kitti dataset
         estimate_scale = false;
     elseif(dataset == 1) % Malaga dataset 
-        estimate_scale = true;
+        estimate_scale = false;
     elseif(dataset == 2)
         estimate_scale = true;
     end
 
     % Align using Umemaya's algorithm
-    estimated_xyz_aligned = umeyama(estimated_xyz, ground_truth_xyz, false, false);
+    estimated_xyz_aligned = umeyama(estimated_xyz, ground_truth_xyz, estimate_scale, false);
     
     % Calculate ATE
     ATE = sqrt(mean((estimated_xyz_aligned - ground_truth_xyz).^2, 'all'));
@@ -42,7 +42,7 @@ function [fig_count, fig] = reportTrajectoryError(poses, poses_ground_truth, dat
     fig_count = fig_count + 1;
     fig = figure(fig_count);
     subplot(1,2,1)
-    y_lim = ceil(max([abs(estimated_xyz_aligned(3, :)) abs(ground_truth_xyz(3, :))]));
+    y_lim = max(ceil(max([abs(estimated_xyz_aligned(3, :)) abs(ground_truth_xyz(3, :))])), 1) ;
     plot(estimated_xyz_aligned(1, :), estimated_xyz_aligned(3, :), '-o', ...
         'DisplayName', 'Estimated trajectory (aligned)');
     axis([-inf inf -y_lim y_lim]);

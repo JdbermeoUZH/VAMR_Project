@@ -14,7 +14,7 @@ addpath('featureDetection/');               % general feature detection
 
 addpath('featureMatching/');                % matching stuff
 
-addpath('ransac/');
+addpath('8point/');
 
 addpath('continuousOperation/');
 

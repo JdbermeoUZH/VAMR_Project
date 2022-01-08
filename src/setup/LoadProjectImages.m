@@ -17,7 +17,7 @@ if ds == 0
     assert(exist('kitti_path', 'var') ~= 0);
     dataset.ground_truth = load([kitti_path '/poses/05.txt']);
     dataset.ground_truth = dataset.ground_truth(:, [end-8 end]);
-    last_frame = 4540;
+    last_frame = 2760;
     dataset.K = [7.188560000000e+02 0 6.071928000000e+02
         0 7.188560000000e+02 1.852157000000e+02
         0 0 1];
@@ -34,7 +34,7 @@ elseif ds == 1
         0 621.18428 309.05989
         0 0 1];
     gps_data = load([malaga_path '/malaga-urban-dataset-extract-07_all-sensors_GPS.txt']);
-    dataset.ground_truth = gps_data(:, [9, 11]);
+    dataset.ground_truth = gps_data(:, [10, 9]); % Local X is latitude, Local Y is longitude
 elseif ds == 2
     % Path containing images, depths and all...
     assert(exist('parking_path', 'var') ~= 0);
@@ -75,7 +75,7 @@ end
 %% Continuous operation 
 %(added test range for shorter runtime)
 if test
-	range = (bootstrap_frames(2)+1):test_range;
+	range = (bootstrap_frames(2)+1): bootstrap_frames(2) + test_range ;
 else
 	range = (bootstrap_frames(2)+1):last_frame;
 end
