@@ -58,9 +58,9 @@ function [fig] = plotContinuousOp(ldmk_kps_3D, R_C2_W, T_C2_W, img, ...
     
     axis equal
     % center plot on current position
-    % axis([T_C2_W(1)-axis_range_x, T_C2_W(1)+axis_range_x, ...
-    %    T_C2_W(2)-axis_range_y, T_C2_W(2)+axis_range_y, ...
-    %    T_C2_W(3)-axis_range_z_m, T_C2_W(3)+axis_range_z])
+    axis([T_C2_W(1)-axis_range_x, T_C2_W(1)+axis_range_x, ...
+       T_C2_W(2)-axis_range_y, T_C2_W(2)+axis_range_y, ...
+       T_C2_W(3)-axis_range_z_m, T_C2_W(3)+axis_range_z])
     rotate3d on;
     grid
     hold off
@@ -102,7 +102,7 @@ function [fig] = plotContinuousOp(ldmk_kps_3D, R_C2_W, T_C2_W, img, ...
     xlabel('x');
     ylabel('z');
     axis equal
-    %axis([T_C2_W(1)-axis_range_x, T_C2_W(1)+axis_range_x, T_C2_W(3)-axis_range_z_m, T_C2_W(3)+axis_range_z])
+    axis([T_C2_W(1)-axis_range_x, T_C2_W(1)+axis_range_x, T_C2_W(3)-axis_range_z_m, T_C2_W(3)+axis_range_z])
     title(sprintf('Trajectory of last 20 frames and current landmarks in 2D (@ frame: %.0f)', frame_num));
 
     %% Display number of tracked landmarks over the last 20 features
