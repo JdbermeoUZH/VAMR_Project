@@ -1,8 +1,8 @@
 function [hyperparameters] = LoadHyperParams()
 
 %% Run params
-hyperparameters.test					= true;         % Only run the test_range frames in 
-hyperparameters.test_range				= 220;           % Number of frames to run the test
+hyperparameters.test					= false;         % Only run the test_range frames in 
+hyperparameters.test_range				= 50;           % Number of frames to run the test
 %% bootstraping
 hyperparameters.bootstrap_frames		= [1 3];
 %% hyperparams 8point
@@ -25,7 +25,7 @@ hyperparameters.fast_min_quality        = 0.1;          % 0.1,
 hyperparameters.fast_min_contrast       = 0.2;          % 0.2,
 %% hypeparameters KLT
 hyperparameters.klt_NumPyramidLevels    = 4;            % Default is 3. Number of scales to use. Btw 1 and 4 recommended in matlab doc
-hyperparameters.klt_MaxBidirectionalError = 3;        % Default is inf. Error measured in piexels. Btw 0 and 3 recommended in matlab doc
+hyperparameters.klt_MaxBidirectionalError = 3;          % Default is inf. Error measured in piexels. Btw 0 and 3 recommended in matlab doc
 hyperparameters.klt_MaxIterations       = 30;           % Default is 30. Btw 10 and 50 recommended in matlab doc
 hyperparameters.klt_BlockSize           = [31, 31];     % Default is [31, 31]. Size of template's box to track. The higher the longer it takes
 hyperparameters.klt_withRounding        = true;         % Wether or not to round matched positions to integers or not
@@ -37,7 +37,7 @@ hyperparameters.match_withRounding      = false;        % Wether or not to round
 %% hypeparameters continous operation
 hyperparameters.poseEstimationAlgo      = "8point";     % "8point" or "PnP"
 hyperparameters.new_candidate_keypoints_dist_thre = 16; % (distance in pixels)^2 to consider a point as the same point
-hyperparameters.bearing_angle_threshold = 5*pi/180;     % Bearing angle at which we can consider safe adding a feature as a landmark
+hyperparameters.bearing_angle_threshold = 0.5*pi/180;     % Bearing angle at which we can consider safe adding a feature as a landmark
 %% hypeparameters reporting
 hyperparameters.reporting_window        = 20;           % Last n frames to use in some of the plots
 hyperparameters.subtrajectory_lengths   = [3, 7, 15, 23, 30, 50, 100]; % Subtrajectory lengths to use to for RTE

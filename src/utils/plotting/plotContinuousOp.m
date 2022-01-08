@@ -2,10 +2,26 @@ function [] = plotContinuousOp(ldmk_kps_3D, R_C2_W, T_C2_W, img, ...
     ldmk_kps_2D, candidate_kps_2D, fig_num, ...
     estimated_trajectory, ...
     num_landmarks, landmarks_postion, reporting_window, ...
-    frame_num)
+    frame_num, dataset)
     % TODO: Documentation
-
-    axis_range = 50;
+    
+    if (dataset == 0)
+        axis_range_x = 50;
+        axis_range_y = 50;
+        axis_range_z = 50;
+        axis_range_z_m = axis_range_z;
+    elseif (dataset == 1)
+        axis_range_x = 50;
+        axis_range_y = 50;
+        axis_range_z = 50;
+        axis_range_z_m = axis_range_z;
+    elseif(dataset == 2)
+        axis_range_x = 50;
+        axis_range_y = 50;
+        axis_range_z = 140;
+        axis_range_z_m = 20;
+    end
+    
     %% Conver everything to homogenous coordinates
     ldmk_kps_3D_h = vertcat(ldmk_kps_3D, ones(1, length(ldmk_kps_3D)));
 
@@ -41,7 +57,9 @@ function [] = plotContinuousOp(ldmk_kps_3D, R_C2_W, T_C2_W, img, ...
     
     axis equal
     % center plot on current position
-    axis([T_C2_W(1)-axis_range, T_C2_W(1)+axis_range, T_C2_W(2)-axis_range, T_C2_W(2)+axis_range, T_C2_W(3)-axis_range, T_C2_W(3)+axis_range])
+    axis([T_C2_W(1)-axis_range_x, T_C2_W(1)+axis_range_x, ...
+        T_C2_W(2)-axis_range_y, T_C2_W(2)+axis_range_y, ...
+        T_C2_W(3)-axis_range_z_m, T_C2_W(3)+axis_range_z])
     rotate3d on;
     grid
     hold off
@@ -83,7 +101,7 @@ function [] = plotContinuousOp(ldmk_kps_3D, R_C2_W, T_C2_W, img, ...
     xlabel('x');
     ylabel('z');
     axis equal
-    axis([T_C2_W(1)-axis_range, T_C2_W(1)+axis_range, T_C2_W(3)-axis_range, T_C2_W(3)+axis_range])
+    axis([T_C2_W(1)-axis_range_x, T_C2_W(1)+axis_range_x, T_C2_W(3)-axis_range_z_m, T_C2_W(3)+axis_range_z])
     title(sprintf('Trajectory of last 20 frames and current landmarks in 2D (@ frame: %.0f)', frame_num));
 
     %% Display number of tracked landmarks over the last 20 features

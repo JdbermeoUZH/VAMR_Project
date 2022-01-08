@@ -32,7 +32,7 @@ function [fig_count] = reportTrajectoryError(poses, poses_ground_truth, dataset,
     end
 
     % Align using Umemaya's algorithm
-    estimated_xyz_aligned = umeyama(estimated_xyz, ground_truth_xyz, false, false);
+    estimated_xyz_aligned = umeyama(estimated_xyz, ground_truth_xyz, estimate_scale, false);
     
     % Calculate ATE
     ATE = sqrt(mean((estimated_xyz_aligned - ground_truth_xyz).^2, 'all'));
@@ -42,7 +42,7 @@ function [fig_count] = reportTrajectoryError(poses, poses_ground_truth, dataset,
     fig_count = fig_count + 1;
     figure(fig_count);
     subplot(1,2,1)
-    y_lim = ceil(max([abs(estimated_xyz_aligned(3, :)) abs(ground_truth_xyz(3, :))]));
+    y_lim = max(ceil(max([abs(estimated_xyz_aligned(3, :)) abs(ground_truth_xyz(3, :))])), 1) ;
     plot(estimated_xyz_aligned(1, :), estimated_xyz_aligned(3, :), '-o', ...
         'DisplayName', 'Estimated trajectory (aligned)');
     axis([-inf inf -y_lim y_lim]);

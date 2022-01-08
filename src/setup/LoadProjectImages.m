@@ -17,7 +17,7 @@ if ds == 0
     assert(exist('kitti_path', 'var') ~= 0);
     dataset.ground_truth = load([kitti_path '/poses/05.txt']);
     dataset.ground_truth = dataset.ground_truth(:, [end-8 end]);
-    last_frame = 4540;
+    last_frame = 2760;
     dataset.K = [7.188560000000e+02 0 6.071928000000e+02
         0 7.188560000000e+02 1.852157000000e+02
         0 0 1];
