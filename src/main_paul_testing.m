@@ -78,7 +78,7 @@ end
 
 if(test.EVERYTHING)
     fprintf('\n\n Test EVERYTHING \n=====================\n');
-    parfor i = 0:2    
+    parfor i = 0:8    
         parTesting(i, hyperparameters, filepaths);
     end
 end
@@ -89,7 +89,15 @@ fprintf('====================== Testing done ☑️ ======================');
 fprintf('\n=============================================================\n');
 
 function parTesting(i, hyperparameters, filepaths)
-    filepaths.ds    = i;
+    filepaths.ds    = idivide(i, int32(3), 'floor');
+    if (i<3)
+        j = i+1;
+    elseif (i<6)
+        j = i-2;
+    else
+        j = i-5;
+    end
+    hyperparameters.featDetec_algo = hyperparameters.featDetec_algo_list(j);
     datasets        = LoadProjectImages(hyperparameters, filepaths);
     fig_count       = i*2+1;
     [fig_count]     = continousPoseEstimationTest( ...
