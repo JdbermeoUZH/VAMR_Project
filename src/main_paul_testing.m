@@ -78,15 +78,8 @@ end
 
 if(test.EVERYTHING)
     fprintf('\n\n Test EVERYTHING \n=====================\n');
-    for i = 0:2    
-        filepaths.ds = i;
-        datasets = LoadProjectImages(hyperparameters, filepaths);
-        for j = 1:size(hyperparameters.featDetec_algo_list, 2)
-            hyperparameters.featDetec_algo = hyperparameters.featDetec_algo_list(j);
-            [fig_count]  = continousPoseEstimationTest( ...
-                datasets, hyperparameters, fig_count);
-            fig_count = fig_count - 1; % to plot in same figure
-        end
+    parfor i = 0:2    
+        parTesting(i, hyperparameters, filepaths);
     end
 end
     
@@ -94,3 +87,11 @@ end
 fprintf('\n=============================================================\n');
 fprintf('====================== Testing done ☑️ ======================');
 fprintf('\n=============================================================\n');
+
+function parTesting(i, hyperparameters, filepaths)
+    filepaths.ds    = i;
+    datasets        = LoadProjectImages(hyperparameters, filepaths);
+    fig_count       = i*2+1;
+    [fig_count]     = continousPoseEstimationTest( ...
+                        datasets, hyperparameters, fig_count);
+end

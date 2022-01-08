@@ -36,6 +36,7 @@ function [fig] = plotContinuousOp(ldmk_kps_3D, R_C2_W, T_C2_W, img, ...
 
     %% Visualize the 3-D landmarks and camera poses
     fig = figure(fig_num);
+    fig.Position = [0 0 1920 1080];
     subplot(2,3,[1])
     % R,T should encode the pose of camera 2, such that M1 = [I|0] and M2=[R|t]
     

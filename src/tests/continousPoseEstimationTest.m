@@ -44,8 +44,11 @@ function [fig_count] = continousPoseEstimationTest(datasets, hyperparameters, fi
     % set up video save
     filename = hyperparameters.featDetec_algo + "_" + datasets.ds;
     if(hyperparameters.test)
-        filename = filename + "_test";
+        filename = "../output_test/" + filename + "_test";
+    else 
+        filename = "../output/" + filename + "_test";
     end
+
     writerObj = VideoWriter(filename);  %// create video file
     writerObj.FrameRate = 2;            %// set to 2 frames per second
     open(writerObj);                    %// open file for writing video data
