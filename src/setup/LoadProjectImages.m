@@ -34,7 +34,7 @@ elseif ds == 1
         0 621.18428 309.05989
         0 0 1];
     gps_data = load([malaga_path '/malaga-urban-dataset-extract-07_all-sensors_GPS.txt']);
-    dataset.ground_truth = gps_data(:, [9, 10]);
+    dataset.ground_truth = gps_data(:, [10, 9]); % Local X is latitude, Local Y is longitude
 elseif ds == 2
     % Path containing images, depths and all...
     assert(exist('parking_path', 'var') ~= 0);

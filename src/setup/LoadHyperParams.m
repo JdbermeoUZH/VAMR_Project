@@ -40,5 +40,5 @@ hyperparameters.new_candidate_keypoints_dist_thre = 16; % (distance in pixels)^2
 hyperparameters.bearing_angle_threshold = 5*pi/180;     % Bearing angle at which we can consider safe adding a feature as a landmark
 %% hypeparameters reporting
 hyperparameters.reporting_window        = 20;           % Last n frames to use in some of the plots
-hyperparameters.subtrajectory_lengths   = [1, 2, 3, 5]; % Subtrajectory lengths to use to for RTE
+hyperparameters.subtrajectory_lengths   = [3, 5, 7, 10, 20]; % Subtrajectory lengths to use to for RTE
 end
