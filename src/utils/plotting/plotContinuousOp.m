@@ -22,6 +22,7 @@ function [] = plotContinuousOp(ldmk_kps_3D, R_C2_W, T_C2_W, img, ...
         axis_range_z_m = 20;
     end
     
+
     %% Conver everything to homogenous coordinates
     ldmk_kps_3D_h = vertcat(ldmk_kps_3D, ones(1, length(ldmk_kps_3D)));
 
