@@ -5,7 +5,7 @@ function [] = plotContinuousOp(ldmk_kps_3D, R_C2_W, T_C2_W, img, ...
     frame_num)
     % TODO: Documentation
 
-    axis_range = 50;
+    axis_range = 90;
     %% Conver everything to homogenous coordinates
     ldmk_kps_3D_h = vertcat(ldmk_kps_3D, ones(1, length(ldmk_kps_3D)));
 
