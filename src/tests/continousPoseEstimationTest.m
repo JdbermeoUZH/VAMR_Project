@@ -41,6 +41,17 @@ function [fig_count] = continousPoseEstimationTest(datasets, hyperparameters, fi
     num_landmarks = zeros(length(datasets.imgs) + 1);
     num_landmarks(1) = size(State_before.X, 1);
 
+    % set up video save
+    filename = hyperparameters.featDetec_algo + "_" + datasets.ds;
+    if(hyperparameters.test)
+        filename = filename + "_test";
+    end
+    writerObj = VideoWriter(filename);  %// create video file
+    writerObj.FrameRate = 2;            %// set to 2 frames per second
+    open(writerObj);                    %// open file for writing video data
+
+    % measure needed time  
+    tStart = tic;
     %% Continious estimation of points with frames after last keyframe
     for i = 1:length(datasets.imgs)
         % Retrieve new frame
@@ -58,22 +69,34 @@ function [fig_count] = continousPoseEstimationTest(datasets, hyperparameters, fi
         num_landmarks(i) = size(State_now.X, 1);
         
         % Plot result of pose estimation and matched features btw frames
-        plotContinuousOp(State_now.X.', T_wc_now(:, 1:3), T_wc_now(:, 4), ...
+        fig = plotContinuousOp(State_now.X.', T_wc_now(:, 1:3), T_wc_now(:, 4), ...
             img_now, State_now.P, State_now.C, fig_count, poses(3 : i + 2, :), ...
             num_landmarks(1:i), State_now.X, hyperparameters.reporting_window, ...
             i + hyperparameters.bootstrap_frames(2));
+        % save plot as movie/gif
+        frame = getframe(fig);          %// Capture axes or figure as movie frame
+        writeVideo(writerObj,frame);    %// Write video data to file
 
         % Set values for next iteration
         img_old = img_now;
         State_before = State_now;
         T_wc_before = T_wc_now;
     end
+    close(writerObj);                   %// Close video file
+    % write needed time to text filek
+    tStop           = toc(tStart);
+    filename_time   = filename + "_time.txt";
+    fid             = fopen(filename_time,'wt');
+    fprintf(fid, string(tStop));
+    fclose(fid);
+
 
     %% Report Error in estimation of trajectory before BA
     % first remove the poses line of the frames that were not included in
     % the first bootstrapping
-    fig_count = reportTrajectoryError(poses, datasets.ground_truth, datasets.ds, ...
+    filename_error = filename + "_error.png";
+    [fig_count, fig] = reportTrajectoryError(poses, datasets.ground_truth, datasets.ds, ...
         'Error Measurements on translation without BA', hyperparameters, fig_count);
-
+    saveas(fig, filename_error);
 end
 

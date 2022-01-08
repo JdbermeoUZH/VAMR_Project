@@ -1,4 +1,4 @@
-function [fig_count] = reportTrajectoryError(poses, poses_ground_truth, dataset, ...
+function [fig_count, fig] = reportTrajectoryError(poses, poses_ground_truth, dataset, ...
     figure_grid_title, hyperparameters, fig_count)
 %REPORTTRAJECTORYERROR Summary of this function goes here
 %   Detailed explanation goes here
@@ -40,7 +40,7 @@ function [fig_count] = reportTrajectoryError(poses, poses_ground_truth, dataset,
     % Plot completely aligned estimated and groundtruth trajectories
     %  along with the ATE
     fig_count = fig_count + 1;
-    figure(fig_count);
+    fig = figure(fig_count);
     subplot(1,2,1)
     y_lim = ceil(max([abs(estimated_xyz_aligned(3, :)) abs(ground_truth_xyz(3, :))]));
     plot(estimated_xyz_aligned(1, :), estimated_xyz_aligned(3, :), '-o', ...

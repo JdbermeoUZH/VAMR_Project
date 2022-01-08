@@ -6,6 +6,7 @@ addpath('utils/recoverPoseFromFundMatrix/');% some utility functions (mostly lon
 addpath('utils/plotting/');                 % some utility functions (mostly plotting)
 addpath('utils/triangulation/');            % some utility functions (mostly triangulation)
 addpath('utils/trajectoryAlignment/');      % some utility functions
+addpath('utils/movie/');
 
 addpath('setup/');		                    % project setup (hyperparams, loading images, ...)
 
@@ -20,21 +21,24 @@ addpath('continuousOperation/');
 addpath('bootstrapping/');                  % yeah bootstrap hurray
 
 addpath('tests/');                          % super cool testing
-% Load stuff
-filepaths       = LoadFilePaths();          % get paths to datasets
-hyperparameters = LoadHyperParams();        % change ALL params here (no param setting in this file please)
-datasets        = LoadProjectImages(hyperparameters, filepaths);  % get our images! 😎
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Note: this is a file to test functions! not to be used and loaded
-% anywhere else!
 %%%%%%%%%%%%%%%%%%%% change the following according to what you want to test %%%%%%%%%%%%
 test.harris     = false;
 test.sift       = false;
 test.bootstrap  = false;
-test.contOp     = true;
+test.contOp     = false;
+test.EVERYTHING = true;
 
 test.all        = false;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Load stuff
+filepaths       = LoadFilePaths();          % get paths to datasets
+hyperparameters = LoadHyperParams();        % change ALL params here (no param setting in this file please)
+if (~test.EVERYTHING)
+    datasets        = LoadProjectImages(hyperparameters, filepaths);  % get our images! 😎
+end
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Note: this is a file to test functions! not to be used and loaded
+% anywhere else!
 fig_count       = 1;        % dynamically increase after each new figure
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% lets begin 😎 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -71,6 +75,21 @@ if(test.contOp || test.all)
     [fig_count]  = continousPoseEstimationTest( ...
         datasets, hyperparameters, fig_count);
 end
+
+if(test.EVERYTHING)
+    fprintf('\n\n Test EVERYTHING \n=====================\n');
+    for i = 0:2    
+        filepaths.ds = i;
+        datasets = LoadProjectImages(hyperparameters, filepaths);
+        for j = 1:size(hyperparameters.featDetec_algo_list, 2)
+            hyperparameters.featDetec_algo = hyperparameters.featDetec_algo_list(j);
+            [fig_count]  = continousPoseEstimationTest( ...
+                datasets, hyperparameters, fig_count);
+            fig_count = fig_count - 1; % to plot in same figure
+        end
+    end
+end
+    
 
 fprintf('\n=============================================================\n');
 fprintf('====================== Testing done ☑️ ======================');
