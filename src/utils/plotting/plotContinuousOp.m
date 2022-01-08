@@ -24,7 +24,7 @@ function [] = plotContinuousOp(ldmk_kps_3D, R_C2_W, T_C2_W, img, ...
     
 
     %% Conver everything to homogenous coordinates
-    ldmk_kps_3D_h = vertcat(ldmk_kps_3D, ones(1, length(ldmk_kps_3D)));
+    ldmk_kps_3D_h = vertcat(ldmk_kps_3D, ones(1, size(ldmk_kps_3D, 2)));
 
     % R,T should encode the pose of camera 2, such that M1 = [I|0] and M2=[R|t]
     % P is a [4xN] matrix containing the triangulated point cloud (in
@@ -32,7 +32,7 @@ function [] = plotContinuousOp(ldmk_kps_3D, R_C2_W, T_C2_W, img, ...
     ldmk_kps_2D = ldmk_kps_2D.';
     ldmk_kps_2D = [ldmk_kps_2D;ones(1, length(ldmk_kps_2D))];
     candidate_kps_2D = candidate_kps_2D.';
-    candidate_kps_2D = [candidate_kps_2D;ones(1, length(candidate_kps_2D))];
+    candidate_kps_2D = [candidate_kps_2D;ones(1, size(candidate_kps_2D, 2))];
 
     %% Visualize the 3-D landmarks and camera poses
     figure(fig_num),
@@ -102,7 +102,7 @@ function [] = plotContinuousOp(ldmk_kps_3D, R_C2_W, T_C2_W, img, ...
     xlabel('x');
     ylabel('z');
     axis equal
-    axis([T_C2_W(1)-axis_range_x, T_C2_W(1)+axis_range_x, T_C2_W(3)-axis_range_z_m, T_C2_W(3)+axis_range_z])
+    %axis([T_C2_W(1)-axis_range_x, T_C2_W(1)+axis_range_x, T_C2_W(3)-axis_range_z_m, T_C2_W(3)+axis_range_z])
     title(sprintf('Trajectory of last 20 frames and current landmarks in 2D (@ frame: %.0f)', frame_num));
 
     %% Display number of tracked landmarks over the last 20 features
