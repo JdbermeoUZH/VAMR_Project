@@ -1,21 +1,10 @@
 # VAMR_Project
 Class Project
 
-## File structure:
+## Running the pipeline
 
-Note: the ```_``` character here denotes to being a directory and not the actual directory name
+First of all check out the branch ”continuous operation test” from https://github.com/JdbermeoUZH/VAMR Project/.
 
-```
-+-- _src
-|   +-- _featureDetection
-|      [our differnet implementations for featrue detection]
-|   +-- _utils
-|       [plotting, debugging, etc]
-|   +-- _setup
-|       [loading global variables, hyperparams, ...]
-|   +-- main (where all other modules are called)
-+-- _datasets
-|   +-- _kitti
-|   +-- _malaga
-|   +-- _parking
-```
+Before you call the "main.m" function look over the file 'setup/LoadHyperParams.m' and change the used feature detection algorithm to you liking (featDetec algo). Please run it on Matlab2021b.
+
+If you only want to test it on a subset of the total dataset set (test) to true and specify the number of images to use (test range). The used dataset is specified in 'setup/loadLoadFilePaths'. Please consider the comments for valid hyperparameter inputs.
