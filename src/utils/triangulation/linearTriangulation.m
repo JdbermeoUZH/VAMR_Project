@@ -1,4 +1,4 @@
-function P = linearTriangulation(p1,p2,M1,M2)
+function [P,badpoints] = linearTriangulation(p1,p2,M1,M2)
 % LINEARTRIANGULATION  Linear Triangulation
 %
 % Input:
@@ -37,8 +37,9 @@ for j=1:NumPoints
 end
 
 %Eliminate entries that would cause a decimal overflow
-[x,y] = find(abs(P)<10^-7);
-P(:,y)=[];
+[~,y] = find(abs(P)<10^-7);
+P(:,y) = []; % 
+badpoints = y;%%%%%%%
 
 P = P./repmat(P(4,:),4,1); % Dehomogeneize (P is expressed in homogeneous coordinates)
 
