@@ -49,9 +49,9 @@ function [fig_count] = continousPoseEstimationTest(datasets, hyperparameters, fi
         filename = "../output/" + filename;
     end
 
-    writerObj = VideoWriter(filename);  %// create video file
-    writerObj.FrameRate = 2;            %// set to 2 frames per second
-    open(writerObj);                    %// open file for writing video data
+    % writerObj = VideoWriter(filename);  %// create video file
+    % writerObj.FrameRate = 2;            %// set to 2 frames per second
+    % open(writerObj);                    %// open file for writing video data
 
     % measure needed time  
     tStart = tic;
@@ -77,15 +77,15 @@ function [fig_count] = continousPoseEstimationTest(datasets, hyperparameters, fi
             num_landmarks(1:i), State_now.X, hyperparameters.reporting_window, ...
             i + hyperparameters.bootstrap_frames(2), datasets.ds);
         % save plot as movie/gif
-        frame = getframe(fig);          %// Capture axes or figure as movie frame
-        writeVideo(writerObj,frame);    %// Write video data to file
+        % frame = getframe(fig);          %// Capture axes or figure as movie frame
+        % writeVideo(writerObj,frame);    %// Write video data to file
 
         % Set values for next iteration
         img_old = img_now;
         State_before = State_now;
         T_wc_before = T_wc_now;
     end
-    close(writerObj);                   %// Close video file
+    %close(writerObj);                   %// Close video file
     % write needed time to text filek
     tStop           = toc(tStart);
     filename_time   = filename + "_time.txt";

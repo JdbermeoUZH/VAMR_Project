@@ -25,8 +25,8 @@ addpath('tests/');                          % super cool testing
 test.harris     = false;
 test.sift       = false;
 test.bootstrap  = false;
-test.contOp     = false;
-test.EVERYTHING = true;
+test.contOp     = true;
+test.EVERYTHING = false;
 
 test.all        = false;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -78,7 +78,7 @@ end
 
 if(test.EVERYTHING)
     fprintf('\n\n Test EVERYTHING \n=====================\n');
-    parfor i = 3:8    
+    parfor i = 4:4    
         parTesting(i, hyperparameters, filepaths);
     end
 end
