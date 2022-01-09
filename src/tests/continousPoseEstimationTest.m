@@ -44,8 +44,10 @@ function [fig_count] = continousPoseEstimationTest(datasets, hyperparameters, fi
     % set up video save
     filename = hyperparameters.featDetec_algo + "_" + datasets.ds;
     if(hyperparameters.test)
+        mkdir('../', 'output_test');
         filename = "../output_test/" + filename + "_test";
     else 
+        mkdir('../', 'output');
         filename = "../output/" + filename;
     end
 
