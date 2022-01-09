@@ -1,22 +1,19 @@
 function [matched_keypoints_query,matched_keypoints_database] = getMatchedPoints(...
-    query_keypoint_location, database_keypoint_location,...
-    query_descriptors, database_descriptors, lambda)
-%GETMATCHEDPOINTS Return the location of matched points based on feature
-% detection and pairwise comparisson.
-%   - Match features descriptors from both frames using pairwise comparisson 
-%     with euclidean distance.
-%   - Return the location of the matched features in both images
+                keypoints_query, keypoints_database, ...  
+                descriptors_query, descriptors_database, hyperparameters)
 
-% Match descriptors between the two frames
-matches = matchDescriptors(query_descriptors, database_descriptors, lambda);
-
-% Create vectors with positions of pixels matched in both frames
-matched_keypoints_query = query_keypoint_location(:, matches > 0).';
-matched_keypoints_database = database_keypoint_location(:, matches(matches > 0)).';
-
-% Hacky fix for flipped coordinates
-matched_keypoints_query = [matched_keypoints_query(:,2), matched_keypoints_query(:,1)];
-matched_keypoints_database = [matched_keypoints_database(:,2), matched_keypoints_database(:,1)];
-
+    % first figure out which feature detection algo was used
+    if (hyperparameters.featDetec_algo == "SIFT")
+        [matched_keypoints_query, matched_keypoints_database] = ...
+            getMatchedPoints_sift(  keypoints_query, keypoints_database, ...  
+                                    descriptors_query, descriptors_database, ...
+                                    hyperparameters.match_threshold, ...
+                                    hyperparameters.match_max_ratio, ...
+                                    hyperparameters.match_unique);
+    elseif (hyperparameters.featDetec_algo == "Harris")
+        [matched_keypoints_query, matched_keypoints_database] = ...
+            getMatchedPoints_harris(keypoints_query, keypoints_database, ...  
+                                    descriptors_query, descriptors_database, ...
+                                    hyperparameters.match_lambda);
+    end
 end
-
