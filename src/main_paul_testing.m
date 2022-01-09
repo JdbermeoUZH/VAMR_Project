@@ -78,7 +78,7 @@ end
 
 if(test.EVERYTHING)
     fprintf('\n\n Test EVERYTHING \n=====================\n');
-    parfor i = 0:8    
+    parfor i = 3:8    
         parTesting(i, hyperparameters, filepaths);
     end
 end

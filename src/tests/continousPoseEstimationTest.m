@@ -46,7 +46,7 @@ function [fig_count] = continousPoseEstimationTest(datasets, hyperparameters, fi
     if(hyperparameters.test)
         filename = "../output_test/" + filename + "_test";
     else 
-        filename = "../output/" + filename + "_test";
+        filename = "../output/" + filename;
     end
 
     writerObj = VideoWriter(filename);  %// create video file

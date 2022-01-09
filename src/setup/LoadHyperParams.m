@@ -20,16 +20,16 @@ hyperparameters.sift_sigma 				= 1.6;			% 1,    1.6 is recommended in paper (TOD
 hyperparameters.sift_contrast_threshold	= 0.02;			% 0.04, 0.02 gives more features (and still looks acceptable)
 %% hypeparameters Harris
 hyperparameters.harris_filer_size       = 5;            % 5,
-hyperparameters.harris_min_quality      = 0.01;         % 0.01,
+hyperparameters.harris_min_quality      = 0.0001;       % 0.01,
 %% hypeparameters FAST
 hyperparameters.fast_min_quality        = 0.1;          % 0.1,
-hyperparameters.fast_min_contrast       = 0.1;          % 0.2,
+hyperparameters.fast_min_contrast       = 0.01;          % 0.2,
 %% hypeparameters KLT
 hyperparameters.klt_NumPyramidLevels    = 3;            % Default is 3. Number of scales to use. Btw 1 and 4 recommended in matlab doc
 hyperparameters.klt_MaxBidirectionalError = 3;        % Default is inf. Error measured in piexels. Btw 0 and 3 recommended in matlab doc
 hyperparameters.klt_MaxIterations       = 30;           % Default is 30. Btw 10 and 50 recommended in matlab doc
-hyperparameters.klt_BlockSize           = [21, 21];     % Default is [31, 31]. Size of template's box to track. The higher the longer it takes
-hyperparameters.klt_withRounding        = true;         % Wether or not to round matched positions to integers or not
+hyperparameters.klt_BlockSize           = [31, 31];     % Default is [31, 31]. Size of template's box to track. The higher the longer it takes
+hyperparameters.klt_withRounding        = false;         % Wether or not to round matched positions to integers or not
 %% hyperparameters pairwise matching
 hyperparameters.match_threshold			= 100;			% 100,
 hyperparameters.match_max_ratio			= 0.7;			% 0.7,

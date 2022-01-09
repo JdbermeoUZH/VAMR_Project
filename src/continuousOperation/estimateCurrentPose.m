@@ -43,22 +43,28 @@ end
 
 if (hyperparameters.poseEstimationAlgo == "8point" || PnPfailed)
     %8 points algorithms with RANSAC
-    output = getFundamentalMatrix(keypoints_before, keypoints_now, hyperparameters);
-    F               = output.F;
-    inliersIndex    = output.inliers;
-    inliers_before  = output.inlierPts1;
-    inliers_now     = output.inlierPts2;
-    landmarks_now   = landmarks_now(inliersIndex,:);
-    
-    %Get the relative pose
-    [R, T, ~] = recoverPoseFromFundamentalMatrix(F, K, K, inliers_before, inliers_now);
-    
+    try
+        output = getFundamentalMatrix(keypoints_before, keypoints_now, hyperparameters);
+        F               = output.F;
+        inliersIndex    = output.inliers;
+        inliers_before  = output.inlierPts1;
+        inliers_now     = output.inlierPts2;
+        landmarks_now   = landmarks_now(inliersIndex,:);
+        
+        %Get the relative pose
+        [R, T, ~] = recoverPoseFromFundamentalMatrix(F, K, K, inliers_before, inliers_now);
+        State_now.P = inliers_now(:,1:2);       %-->N*2
+    catch
+        warning('Problem using 8-point');
+        R = eye(3);
+        T = zeros(3,1);
+        State_now.P = State_before.P;       %-->N*2
+    end
     %Get the pose of camera 2 w.r.t world
     T_nb = [R,T;zeros(1,3),1];   %T_c2_c1
     T_wc_now = T_wc_before*invt(T_nb); %T_w_c1 * T_c1_c2 --> 3*4
     
     %Set the state
-    State_now.P = inliers_now(:,1:2);       %-->N*2
     State_now.X = landmarks_now;
     State_now.F = State_before.F;
     State_now.C = State_before.C;
