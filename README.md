@@ -1,11 +1,11 @@
 # VAMR_Project
 Class Project
 
-Scripts Tom messed with:
-mainPaul , baselineTest, Baseline, ValidateKeyframe, matsplit, linearTriangulation
-should check disambiguateRelativePose as well because of the whole mirror thing
 
-and you need to remove contOp from the path because it destroys my soul
+
+How to run:
+ - in src/setup/loadfilepaths , modify the pathe of the datasets to match yours
+ - in src/setup/LoaHyperParams, set the number of frames to test on, as well as parameters of choice
 
 
 
