@@ -1,4 +1,4 @@
-function [R,T, P_3D] = disambiguateRelativePose(Rots,u3,points0_h,points1_h,K1,K2)
+function [R,T, P_3D,badpoints] = disambiguateRelativePose(Rots,u3,points0_h,points1_h,K1,K2)
 % DISAMBIGUATERELATIVEPOSE- finds the correct relative camera pose (among
 % four possible configurations) by returning the one that yields points
 % lying in front of the image plane (with positive depth).
@@ -32,7 +32,7 @@ for iRot = 1:size(Rots, 3)
         T_C2_C1_test = u3 * (-1)^iSignT;
         
         M2 = K2 * [R_C2_C1_test, T_C2_C1_test];
-        P_C1 = linearTriangulation(points0_h, points1_h, M1, M2);
+        [P_C1,badpoints] = linearTriangulation(points0_h, points1_h, M1, M2);%%%%
         
         % project in both cameras
         P_C2 = [R_C2_C1_test T_C2_C1_test] * P_C1;
@@ -48,6 +48,7 @@ for iRot = 1:size(Rots, 3)
             T = T_C2_C1_test;
             P_3D = P_C1(1:3, :);
             total_points_in_front_best = total_points_in_front;
+
         end
     end
 end
